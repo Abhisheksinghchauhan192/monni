@@ -1,6 +1,7 @@
 import { createUser, findUserByEmail } from "../users/user.model.js";
 import ApiError from "../../errors/ApiError.js";
 import { hashPassword, comparePassword } from "../../utils/password.js";
+import { generateToken } from "../../utils/jwt.js";
 
 // Registration of User Business Logic
 export async function registerUser({ name, email, password }) {
@@ -24,10 +25,14 @@ export async function loginUser({ email, password }) {
     throw new ApiError(401, "Invalid email or password");
   }
 
+  const token = generateToken({ id: user.id, publicId: user.public_id });
+
   return {
-    id: user.id,
-    publicId: user.public_id,
-    email: user.email,
-    name: user.name,
+    token,
+    user: {
+      publicId: user.public_id,
+      email: user.email,
+      name: user.name,
+    },
   };
 }
