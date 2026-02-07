@@ -2,6 +2,7 @@ import {
   createExpense,
   deleteExpense,
   getExpensesByUser,
+  getExpensesCursor,
 } from "./expense.model.js";
 
 // POST API : /api/expenses
@@ -29,11 +30,11 @@ export async function getExpenses(req, res, next) {
   try {
     const userId = req.user.id;
 
-    const expenses = await getExpensesByUser(userId);
+    const result = await getExpensesCursor(userId, req.validatedQuery);
 
     res.status(200).json({
       success: true,
-      data: expenses,
+      ...result,
     });
   } catch (err) {
     next(err);

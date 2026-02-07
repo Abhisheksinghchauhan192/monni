@@ -1,23 +1,33 @@
-import Apierror from "../errors/ApiError.js";
 import { ZodError } from "zod";
-// Global validator logic .
-export default function validate(schema) {
+import ApiError from "../errors/ApiError.js";
+
+function handleZodError(err, next) {
+  if (err instanceof ZodError) {
+    const message = err.issues.map((i) => i.message).join(", ");
+    return next(new ApiError(400, message));
+  }
+  next(err);
+}
+
+export function validateBody(schema) {
   return (req, res, next) => {
     try {
       req.body = schema.parse(req.body);
       next();
     } catch (err) {
-      // handle the zod specific errors.
-      if (err instanceof ZodError) {
-        const message = err.issues
-          .map((issue) => {
-            return issue.message;
-          })
-          .join(", ");
-        return next(new Apierror(400, message));
-      }
+      handleZodError(err, next);
+    }
+  };
+}
 
-      next(err); // Handle other errors.
+export function validateQuery(schema) {
+  return (req, res, next) => {
+    try {
+      // DO NOT overwrite req.query
+      req.validatedQuery = schema.parse(req.query);
+      next();
+    } catch (err) {
+      handleZodError(err, next);
     }
   };
 }
