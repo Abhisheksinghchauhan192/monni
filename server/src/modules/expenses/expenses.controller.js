@@ -1,8 +1,8 @@
 import {
   createExpense,
   deleteExpense,
-  getExpensesByUser,
   getExpensesCursor,
+  updateExpense,
 } from "./expense.model.js";
 
 // POST API : /api/expenses
@@ -52,6 +52,30 @@ export async function removeExpense(req, res, next) {
     res.status(200).json({
       status: true,
       message: "expense deleted successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// PUT: api/expenses/:id
+export async function editExpense(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const expenseId = Number(req.params.id);
+
+    const success = await updateExpense(userId, expenseId, req.body);
+
+    if (!success) {
+      return res.status(404).json({
+        success: false,
+        message: "expense not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Expense updated successfully.",
     });
   } catch (err) {
     next(err);

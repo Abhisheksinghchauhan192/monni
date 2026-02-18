@@ -28,17 +28,18 @@ export async function createExpense(userId, expense) {
   return result.insertId;
 }
 
-export async function getExpensesByUser(userId) {
-  const [rows] = await pool.query(
-    `
-        SELECT * FROM expenses WHERE user_id = ?
-        ORDER BY expense_date DESC
-        `,
-    [userId],
-  );
+// get full expenses of user
+// export async function getExpensesByUser(userId) {
+//   const [rows] = await pool.query(
+//     `
+//         SELECT * FROM expenses WHERE user_id = ?
+//         ORDER BY expense_date DESC
+//         `,
+//     [userId],
+//   );
 
-  return rows;
-}
+//   return rows;
+// }
 
 export async function deleteExpense(expenseId, userId) {
   await pool.query(
@@ -49,6 +50,7 @@ export async function deleteExpense(expenseId, userId) {
   );
 }
 
+// get the expense of user with cursor pagination
 export async function getExpensesCursor(userId, options) {
   const { limit, cursor, category, payment_method, fromDate, toDate } = options;
 
@@ -99,4 +101,26 @@ export async function getExpensesCursor(userId, options) {
     nextCursor,
     hasMore: rows.length === limit,
   };
+}
+
+// Update the expense of User
+export async function updateExpense(userId, expenseId, updates) {
+  const fields = [];
+  const values = [];
+  Object.entries(updates).forEach(([key, value]) => {
+    fields.push(`${key} = ?`);
+    values.push(value);
+  });
+  if (fields.length === 0) return false;
+
+  const query = `
+    UPDATE expenses
+    SET ${fields.join(", ")}
+    WHERE id = ? AND user_id = ?
+  `;
+
+  values.push(expenseId, userId);
+
+  const [result] = await pool.query(query, values);
+  return result.affectedRows > 0;
 }
