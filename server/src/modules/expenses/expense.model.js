@@ -124,3 +124,28 @@ export async function updateExpense(userId, expenseId, updates) {
   const [result] = await pool.query(query, values);
   return result.affectedRows > 0;
 }
+
+// Export the Expenses of the user
+export async function getExpensesForExport(userId, from, to) {
+  let query = `
+    SELECT expense_date,amount,category,payment_method,merchant,description
+    FROM expenses
+    WHERE user_id = ?
+  `;
+
+  const params = [userId];
+  if (from) {
+    query += "AND expense_date >= ?";
+    params.push(from);
+  }
+  if (to) {
+    query += "AND expense_date <= ?";
+    params.push(to);
+  }
+
+  query += "ORDER BY expense_date DESC";
+
+  const [rows] = await pool.query(query, params);
+
+  return rows;
+}
