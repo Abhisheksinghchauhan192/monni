@@ -10,21 +10,27 @@ export default function AppLayout() {
       <nav className="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-800 shadow transition-colors duration-300">
         <h1 className="font-bold text-lg">MoNNi</h1>
 
-        <div className="flex gap-6">
+        <div className="flex gap-6 ">
           <Link
-            className="text-gray-700 dark:text-gray-200 hover:text-indigo-600"
+            className="text-gray-700 transition-all duration-400 dark:text-gray-200 hover:text-indigo-200 
+            hover:bg-slate-700 px-3 py-1 rounded
+            "
             to="/app"
           >
             Overview
           </Link>
           <Link
-            className="text-gray-700 dark:text-gray-200 hover:text-indigo-600"
+            className="text-gray-700 transition-all duration-400 dark:text-gray-200 hover:text-indigo-200
+            hover:bg-slate-700 px-3 py-1 rounded
+            "
             to="/app/monthly"
           >
             Monthly
           </Link>
           <Link
-            className="text-gray-700 dark:text-gray-200 hover:text-indigo-600"
+            className="text-gray-700 transition-all duration-400 dark:text-gray-200 hover:text-indigo-200
+            hover:bg-slate-700 px-3 py-1 rounded
+            "
             to="/app/yearly"
           >
             Yearly
@@ -34,7 +40,7 @@ export default function AppLayout() {
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="relative w-10 h-10 flex items-center justify-center rounded-full border border-emerald-300 hover:bg-emerald-50 dark:hover:bg-gray-800 transition-colors duration-300"
+            className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-100 hover:border border-emerald-300 dark:hover:bg-slate-600 transition-colors duration-300"
           >
             <IoSunny className="absolute text-xl transition-all duration-300 rotate-90 scale-0 opacity-0 dark:rotate-0 dark:scale-100 dark:opacity-100" />
 
