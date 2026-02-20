@@ -2,13 +2,11 @@ import { varifyToken } from "../utils/jwt.js";
 import ApiError from "../errors/ApiError.js";
 
 export default function authMiddleWare(req, res, next) {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.monni_token;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!token) {
     return next(new ApiError(401, "Unauthorised"));
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
     const decoded = varifyToken(token);
