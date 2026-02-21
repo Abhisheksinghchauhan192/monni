@@ -3,13 +3,13 @@ import LoginForm from "../components/LoginForm";
 import useLogin from "../hooks/useLogin";
 
 export default function Login() {
-  const { form, loading, error, handleChange, handleSubmit } = useLogin();
+  const { values,errors,loading,handleChange,handleSubmit} = useLogin();
    return (
     <AuthCard title={"Welcome Back"}>
       <LoginForm
-        form={form}
+        form={values}
         loading={loading}
-        error={error}
+        errors={errors}
         onChange={handleChange}
         onSubmit={handleSubmit}
       />

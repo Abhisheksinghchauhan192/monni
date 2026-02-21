@@ -7,7 +7,11 @@ export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const addToast = useCallback((message, type = "info") => {
     const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
+    setToasts((prev) => {
+      if (prev.some((t) => t.message === message)) return prev;
+
+      return [...prev, { id, message, type }];
+    });
     setTimeout(() => {
       removeToast(id);
     }, 4000);
@@ -18,7 +22,7 @@ export function ToastProvider({ children }) {
   };
 
   return (
-    <ToastContext.Provider value={{addToast}}>
+    <ToastContext.Provider value={{ addToast }}>
       {children}
       <ToastContainer
         toasts={toasts}
@@ -30,6 +34,8 @@ export function ToastProvider({ children }) {
 
 export function useToast() {
   const context = useContext(ToastContext);
-  if(!context){console.error("useToast must be used within the ToastProvider")}
+  if (!context) {
+    console.error("useToast must be used within the ToastProvider");
+  }
   return context;
 }

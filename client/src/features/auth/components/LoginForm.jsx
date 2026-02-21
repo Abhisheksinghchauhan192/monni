@@ -1,18 +1,12 @@
 export default function LoginForm({
   form,
   loading,
-  error,
+  errors,
   onChange,
   onSubmit,
 }) {
   return (
     <form onSubmit={onSubmit} className="space-y-5">
-      {error && (
-        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
-          {error}
-        </div>
-      )}
-
       <div>
         <label className="block text-sm mb-1 text-gray-600 dark:text-gray-400">
           Email
@@ -25,6 +19,9 @@ export default function LoginForm({
           required
           className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
         />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+        )}
       </div>
 
       <div>
@@ -39,6 +36,9 @@ export default function LoginForm({
           required
           className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
         />
+        {errors.password && (
+          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+        )}
       </div>
 
       <button

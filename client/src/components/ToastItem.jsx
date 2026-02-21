@@ -1,11 +1,11 @@
-export default function ToastItem({toast,onClose}) {
+export default function ToastItem({ toast, onClose }) {
+  const baseStyles =
+    "px-4 py-3 rounded-lg shadow-lg text-white animate-slide-in";
 
-    const baseStyles =     "px-4 py-3 rounded-lg shadow-lg text-white animate-slide-in";
-
-    const typeStyles = {
-    success: "bg-emerald-500",
-    error: "bg-red-500",
-    info: "bg-blue-500",
+  const typeStyles = {
+    success: "bg-emerald-500 dark:bg-emerald-600",
+    error: "bg-red-500 dark:bg-red-600",
+    info: "bg-blue-500 dark:bg-blue-600",
   };
 
   return (
@@ -17,5 +17,5 @@ export default function ToastItem({toast,onClose}) {
         </button>
       </div>
     </div>
-  )
+  );
 }
