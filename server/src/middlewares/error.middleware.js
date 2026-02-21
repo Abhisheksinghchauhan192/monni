@@ -7,9 +7,7 @@ export default (err, req, res, next) => {
 
   res.status(statusCode).json({
     success: false,
-    error: {
-      message: err.message || "Internal Server Error",
-      code: statusCode,
-    },
+    message: err.message || "Internal Server Error",
+    code: statusCode,
   });
 };
