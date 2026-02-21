@@ -3,14 +3,14 @@ import PublicLayout from "../layouts/PublicLayout";
 import AppLayout from "../layouts/AppLayout";
 import Home from "../pages/Home";
 import Login from "../features/auth/pages/Login";
-import Register from "../features/auth/Register";
+import Register from "../features/auth/pages/Register";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import { lazy } from "react";
 
-// lazy imports .. 
-const Overview = lazy(()=>import("../features/dashboard/Overview"));
-const Monthly = lazy(()=>import("../features/dashboard/Monthly"));
-const Yearly = lazy(()=>import("../features/dashboard/Yearly"));
+// lazy imports ..
+const Overview = lazy(() => import("../features/dashboard/Overview"));
+const Monthly = lazy(() => import("../features/dashboard/Monthly"));
+const Yearly = lazy(() => import("../features/dashboard/Yearly"));
 const routes = [
   {
     path: "/",

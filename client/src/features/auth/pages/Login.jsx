@@ -4,8 +4,7 @@ import useLogin from "../hooks/useLogin";
 
 export default function Login() {
   const { form, loading, error, handleChange, handleSubmit } = useLogin();
-
-  return (
+   return (
     <AuthCard title={"Welcome Back"}>
       <LoginForm
         form={form}
