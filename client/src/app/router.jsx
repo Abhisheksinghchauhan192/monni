@@ -6,6 +6,7 @@ import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import { lazy } from "react";
+import ForgotPassword from "../features/auth/pages/ForgotPassword";
 
 // lazy imports ..
 const Overview = lazy(() => import("../features/dashboard/Overview"));
@@ -25,6 +26,10 @@ const routes = [
         path: "register",
         element: <Register />,
       },
+      {
+        path:"forgot-password",
+        element:<ForgotPassword/>
+      }
     ],
   },
   {

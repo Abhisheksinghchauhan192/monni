@@ -23,3 +23,9 @@ export async function logoutUser() {
   const { data } = await http.post("/auth/logout");
   return data;
 }
+
+// forgot password api call
+export async function forgotPassword() {
+  const { data } = await http.post("/auth/reset-password");
+  return data;
+}

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function LoginForm({
   form,
   loading,
@@ -48,6 +49,14 @@ export default function LoginForm({
       >
         {loading ? "Signing in..." : "Sign In"}
       </button>
+      <div className="text-right">
+        <Link
+          to="/forgot-password"
+          className="text-sm text-emerald-500 hover:underline"
+        >
+          Forgot password?
+        </Link>
+      </div>
     </form>
   );
 }
