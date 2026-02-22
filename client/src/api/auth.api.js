@@ -25,7 +25,13 @@ export async function logoutUser() {
 }
 
 // forgot password api call
-export async function forgotPassword() {
-  const { data } = await http.post("/auth/reset-password");
+export async function forgotPassword(email) {
+  const { data } = await http.post("/auth/forgot-password",email);
   return data;
+}
+
+// reset password request
+export async function resetPassword(token, data) {
+  const response = await http.post(`/auth/reset-password/${token}`,data);
+  return response.data;
 }

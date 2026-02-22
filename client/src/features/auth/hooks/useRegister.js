@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useForm from "../../../hooks/useForm";
-import { registerSchema } from "../shemas/register.schema";
+import { registerSchema } from "../schemas/register.schema";
 import { registerUser } from "../../../api/auth.api";
 import { useToast } from "../../../context/ToastContext";
 
@@ -11,7 +11,7 @@ export default function useRegister() {
   const submitLogic = async (values) => {
     try {
       const response = await registerUser(values);
-      addToast("Account created successfully 🎉", "success");
+      addToast(response.message, "success");
       navigate("/login");
     } catch (err) {
       addToast(err, "error");

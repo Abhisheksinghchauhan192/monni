@@ -6,12 +6,18 @@ import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import { lazy } from "react";
-import ForgotPassword from "../features/auth/pages/ForgotPassword";
 
 // lazy imports ..
 const Overview = lazy(() => import("../features/dashboard/Overview"));
 const Monthly = lazy(() => import("../features/dashboard/Monthly"));
 const Yearly = lazy(() => import("../features/dashboard/Yearly"));
+const ForgotPassword = lazy(
+  () => import("../features/auth/pages/ForgotPassword"),
+);
+const ResetPassword = lazy(
+  () => import("../features/auth/pages/ResetPassword"),
+);
+
 const routes = [
   {
     path: "/",
@@ -27,9 +33,13 @@ const routes = [
         element: <Register />,
       },
       {
-        path:"forgot-password",
-        element:<ForgotPassword/>
-      }
+        path: "forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "reset-password/:token",
+        element: <ResetPassword />,
+      },
     ],
   },
   {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../api/auth.api";
 import { useToast } from "../../../context/ToastContext";
 import useForm from "../../../hooks/useForm";
-import { loginSchema } from "../shemas/login.schema";
+import { loginSchema } from "../schemas/login.schema";
 
 export default function useLogin() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function useLogin() {
     try {
       const response = await loginUser(values);
       setUser(response.data);
-      addToast("Login successful 🎉", "success");
+      addToast(response.message, "success");
       navigate("/app");
     } catch (err) {
       addToast(err, "error");
