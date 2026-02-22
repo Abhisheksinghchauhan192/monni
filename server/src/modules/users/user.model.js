@@ -15,7 +15,9 @@ export async function createUser({ name, email, passwordHash }) {
 }
 
 export async function findUserByEmail(email) {
-  const [rows] = await pool.query(`SELECT * FROM users WHERE email = ?`, [email]);
+  const [rows] = await pool.query(`SELECT * FROM users WHERE email = ?`, [
+    email,
+  ]);
 
   return rows[0] || null;
 }
@@ -48,4 +50,53 @@ export async function updateUserProfile(id, data) {
     `;
 
   await pool.query(query, values);
+}
+
+// Password reseting logic
+export async function saveResetToken(id, hashedToken, expiresAt) {
+  await pool.query(
+    `
+    UPDATE users
+    SET reset_token = ?, reset_token_expires = ?
+    WHERE id = ?
+    `,
+    [hashedToken, expiresAt, id],
+  );
+}
+
+export async function findUserByResetToken(hashedToken) {
+  const [rows] = await pool.query(
+    `
+    SELECT id, email
+    FROM users
+    WHERE reset_token = ?
+      AND reset_token_expires > NOW()
+    `,
+    [hashedToken],
+  );
+
+  return rows[0] || null;
+}
+
+export async function updateUserPassword(id, passwordHash) {
+  await pool.query(
+    `
+    UPDATE users
+    SET password_hash = ?
+    WHERE id = ?
+    `,
+    [passwordHash, id],
+  );
+}
+
+export async function clearResetToken(id) {
+  await pool.query(
+    `
+    UPDATE users
+    SET reset_token = NULL,
+        reset_token_expires = NULL
+    WHERE id = ?
+    `,
+    [id],
+  );
 }

@@ -1,6 +1,11 @@
-import { registerUser, loginUser } from "./auth.service.js";
+import {
+  registerUser,
+  loginUser,
+  forgotPasswordService,
+  resetPasswordService,
+} from "./auth.service.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import { success } from "zod";
+
 // POST API -> /api/auth/register
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -53,5 +58,30 @@ export const logout = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Logged out succesfully.",
+  });
+});
+
+// Reset Password Handeling
+
+export const forgotPasswordController = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  await forgotPasswordService(email);
+
+  res.status(200).json({
+    success: true,
+    message:
+      "If an account with that email exists, a reset link has been sent.",
+  });
+});
+
+export const resetPasswordController = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  await resetPasswordService(token, password);
+  res.status(200).json({
+    success: true,
+    message: "Password reset successful",
   });
 });
