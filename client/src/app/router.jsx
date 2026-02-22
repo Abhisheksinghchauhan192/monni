@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import NotFound from "../pages/NotFound";
 import { lazy } from "react";
 
 // lazy imports ..
@@ -63,6 +64,10 @@ const routes = [
         element: <Yearly />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ];
 

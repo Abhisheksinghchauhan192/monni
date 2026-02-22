@@ -3,8 +3,10 @@ import { resetPasswordSchema } from "../schemas/reset.shema";
 import { resetPassword } from "../../../api/auth.api";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 export default function useResetPassword() {
+  const [isTokenValid, setIsTokenValid] = useState(true);
   const { addToast } = useToast();
   const navigate = useNavigate();
   const { token } = useParams();
@@ -15,11 +17,17 @@ export default function useResetPassword() {
 
       navigate("/login");
     } catch (err) {
-      addToast(err, "error");
+      //Token Expired Page state
+      console.log(err);
+      if (err === "Invalid  Token") {
+        setIsTokenValid(false);
+      } else {
+        addToast(err, "error");
+      }
     }
   };
 
-  return useForm({
+  const useFormReturn = useForm({
     initialValues: {
       password: "",
       confirmPassword: "",
@@ -27,4 +35,9 @@ export default function useResetPassword() {
     schema: resetPasswordSchema,
     onSubmit: submitLogic,
   });
+
+  return {
+    ...useFormReturn,
+    isTokenValid,
+  };
 }
