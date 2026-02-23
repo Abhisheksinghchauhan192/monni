@@ -5,13 +5,11 @@ import StepCard from "../components/ui/StepCard";
 import Footer from "../components/Footer";
 import DashboardPreviewSection from "../components/DashboarPreviewSection";
 import DeveloperSection from "../components/DeveloperSection";
-import useReveal from "../hooks/useReveal";
 import Counter from "../components/ui/Counter";
 import Testimonial from "../components/Testimonial";
 
 export default function Home() {
   const location = useLocation();
-  const { ref, visible } = useReveal();
   useEffect(() => {
     if (location.hash) {
       const element = document.getElementById(location.hash.replace("#", ""));

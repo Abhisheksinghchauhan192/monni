@@ -5,16 +5,17 @@ import { IoSunny } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useState, useRef, useEffect } from "react";
-import { logoutUser } from "../../api/auth.api";
+import { useAuth } from "../../context/AuthContext";
 
 export default function AppNavigationBar() {
   const { toggleTheme, theme } = useTheme();
   const navigate = useNavigate();
+  const {logout} = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
-    await logoutUser();
+    await logout();
     navigate("/");
   };
 
