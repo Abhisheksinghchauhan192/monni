@@ -5,8 +5,15 @@ import {
   dateRangeSchema,
   breakdownSchema,
   trendSchema,
+  dashboardSchema,
 } from "../../validators/analytics/analytics.query.shema.js";
-import { summary, breakdown, trend } from "./analytics.controller.js";
+
+import {
+  summary,
+  breakdown,
+  trend,
+  dashboard,
+} from "./analytics.controller.js";
 
 const router = Router();
 
@@ -20,5 +27,12 @@ router.get(
 );
 
 router.get("/trend", authMiddleware, validateQuery(trendSchema), trend);
+
+router.get(
+  "/dashboard",
+  authMiddleware,
+  validateQuery(dashboardSchema),
+  dashboard,
+);
 
 export default router;

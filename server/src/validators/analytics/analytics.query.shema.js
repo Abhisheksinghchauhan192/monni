@@ -5,7 +5,9 @@ export const dateRangeSchema = z.object({
   to: z.string().optional(),
 });
 
-export const breakdownSchema = dateRangeSchema.extend({
+export const breakdownSchema = z.object({
+  from: z.string(),
+  to: z.string(),
   by: z.enum(["category", "payment_method"]),
 });
 
@@ -13,4 +15,10 @@ export const trendSchema = z.object({
   from: z.string(),
   to: z.string(),
   interval: z.enum(["day", "month"]),
+});
+
+export const dashboardSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+  by: z.enum(["category", "payment_method"]).default("category"),
 });

@@ -1,6 +1,6 @@
 import pool from "../../config/database.js";
 
-// summary total spends in date range
+// Total Spend
 export async function getTotalSpend(userId, from, to) {
   let query = `
     SELECT COALESCE(SUM(amount), 0) AS total
@@ -23,8 +23,36 @@ export async function getTotalSpend(userId, from, to) {
   return row.total;
 }
 
-// total breakdown in date range based on category and payment_method.
+// Expense Count
+export async function getExpenseCount(userId, from, to) {
+  let query = `
+    SELECT COUNT(*) AS count
+    FROM expenses
+    WHERE user_id = ?
+  `;
+  const params = [userId];
+
+  if (from) {
+    query += " AND expense_date >= ?";
+    params.push(from);
+  }
+
+  if (to) {
+    query += " AND expense_date <= ?";
+    params.push(to);
+  }
+
+  const [[row]] = await pool.query(query, params);
+  return row.count;
+}
+
+// Flexible Breakdown (category OR payment_method)
 export async function getBreakdown(userId, from, to, by) {
+  const allowedFields = ["category", "payment_method"];
+  if (!allowedFields.includes(by)) {
+    throw new Error("Invalid breakdown field");
+  }
+
   let query = `
     SELECT ${by} AS label, SUM(amount) AS total
     FROM expenses
@@ -51,7 +79,7 @@ export async function getBreakdown(userId, from, to, by) {
   return rows;
 }
 
-// Trend summary over Time Period.
+// Trend
 export async function getTrend(userId, from, to, interval) {
   const groupExpr =
     interval === "day"
