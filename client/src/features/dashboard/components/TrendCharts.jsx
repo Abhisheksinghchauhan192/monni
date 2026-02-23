@@ -1,5 +1,5 @@
 export default function TrendCharts() {
   return(
-    <div>Trends Chart placeholder</div>
+    <div>Trends Chart PlaceHolder</div>
   )
 }

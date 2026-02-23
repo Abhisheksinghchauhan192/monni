@@ -1,5 +1,5 @@
 export default function AIInsights() {
   return(
-    <div>AI insights placeHolder</div>
+    <div>AI insights PlaceHolder</div>
   )
 }
