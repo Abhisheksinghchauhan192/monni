@@ -1,6 +1,6 @@
 import useForm from "../../../hooks/useForm";
 import { forgotSchema } from "../schemas/forgot.schema";
-import { forgotPassword } from "../../../api/auth.api";
+import { forgotPassword } from "../services/auth.api";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 export default function useForgotPassword() {

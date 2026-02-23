@@ -4,15 +4,17 @@ import axios from "axios";
 // below code for laptop and mobile testing temporarily.
 
 // This dynamically grabs whatever IP/hostname the browser is currently looking at
-const currentHost = window.location.hostname;
+// const currentHost = window.location.hostname;
 
-// Now, use that host to build the API URL, but keep your Express port (3000)
-const apiUrl = `http://${currentHost}:3000/api`;
+// // Now, use that host to build the API URL, but keep your Express port (3000)
+// const apiUrl = `http://${currentHost}:3000/api`;
 
 const http = axios.create({
   // baseURL: import.meta.env.VITE_API_BASE_URL,
   // for phone and laptop testing temp below setting
-  baseURL:apiUrl,
+  // baseURL:apiUrl,
+  // For the reverse Proxy Service now we can do only like 
+  baseURL:"/api",
   withCredentials: true, // for cookies
 });
 

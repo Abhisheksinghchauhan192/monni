@@ -1,6 +1,6 @@
 import useForm from "../../../hooks/useForm";
 import { resetPasswordSchema } from "../schemas/reset.shema";
-import { resetPassword } from "../../../api/auth.api";
+import { resetPassword } from "../services/auth.api";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";

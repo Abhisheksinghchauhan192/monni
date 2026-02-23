@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import useForm from "../../../hooks/useForm";
 import { registerSchema } from "../schemas/register.schema";
-import { registerUser } from "../../../api/auth.api";
+import { registerUser } from "../services/auth.api";
 import { useToast } from "../../../context/ToastContext";
 
 export default function useRegister() {

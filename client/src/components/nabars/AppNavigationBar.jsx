@@ -1,5 +1,4 @@
-
-import {NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { FaMoon } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
@@ -9,7 +8,6 @@ import { useState, useRef, useEffect } from "react";
 import { logoutUser } from "../../api/auth.api";
 
 export default function AppNavigationBar() {
-    
   const { toggleTheme, theme } = useTheme();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -66,17 +64,12 @@ export default function AppNavigationBar() {
           </h1>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-8">
-            <NavLink to="/app" end className={navLinkClass}>
-              Overview
-            </NavLink>
 
-            <NavLink to="/app/monthly" className={navLinkClass}>
-              Monthly
-            </NavLink>
-
-            <NavLink to="/app/yearly" className={navLinkClass}>
-              Yearly
+          <div className="hidden md:flex items-center  gap-8">
+            
+            <NavLink to={"/app"} className={navLinkClass}>Overview</NavLink>
+            <NavLink to="/app/budget" className={navLinkClass}>
+              Budget
             </NavLink>
 
             <button
@@ -96,6 +89,12 @@ export default function AppNavigationBar() {
             >
               <CiLogout className="text-xl" />
             </button>
+            <NavLink
+              to="/app/profile"
+              className="w-10 h-10 rounded-full ring-2 ring-emerald-300"
+            >
+              <img src="/NavbarProfileImage.png" alt="Profile Section"  className="w-10 h-10 rounded-full"/>
+            </NavLink>
           </div>
 
           {/* Mobile Toggle */}
@@ -120,40 +119,48 @@ export default function AppNavigationBar() {
               rounded-2xl
               shadow-lg shadow-black/5 dark:shadow-black/30
               p-5 space-y-3
+              flex flex-col gap-6
             "
           >
-            <div>
+            <div className="flex justify-center items-center">
               <NavLink
-                to="/app"
+                to="/app/profile"
                 end
                 onClick={() => setIsOpen(false)}
-                className={navLinkClass}
+                className="h-20 w-20 rounded-full ring-2 ring-emerald-300 flex flex-col gap-4 "
+              >
+                <img src="/NavbarProfileImage.png" alt="User Profile"  className="h-20 w-20 rounded-full"/>
+                <button
+                onClick={()=>{
+                  setIsOpen(false)
+                  navigate("/app/profile")
+                }}
+                className="hover:text-emerald-500 text-gray-700 dark:text-gray-300 cursor-pointer font-medium"
+                >Profile</button>
+              </NavLink>
+            </div>
+
+            <div>
+              <NavLink 
+              to={"/app"}
+              end
+              onClick={()=>setIsOpen(false)}
+              className={navLinkClass}
               >
                 Overview
               </NavLink>
             </div>
-
             <div>
               <NavLink
-                to="/app/monthly"
+                to="/app/budget"
                 onClick={() => setIsOpen(false)}
                 className={navLinkClass}
               >
-                Monthly
+                Budget
               </NavLink>
             </div>
 
-            <div>
-              <NavLink
-                to="/app/yearly"
-                onClick={() => setIsOpen(false)}
-                className={navLinkClass}
-              >
-                Yearly
-              </NavLink>
-            </div>
-
-            <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
+            <div className="flex gap-3 pt-4 border-t-2 border-gray-200 dark:border-gray-800">
               <button
                 onClick={toggleTheme}
                 className="flex-1 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer"

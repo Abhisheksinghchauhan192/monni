@@ -9,9 +9,9 @@ import NotFound from "../pages/NotFound";
 import { lazy } from "react";
 
 // lazy imports ..
-const Overview = lazy(() => import("../features/dashboard/Overview"));
-const Monthly = lazy(() => import("../features/dashboard/Monthly"));
-const Yearly = lazy(() => import("../features/dashboard/Yearly"));
+const Overview = lazy(() => import("../features/dashboard/pages/Overview"));
+const Budget = lazy(() => import("../features/budget/Budget"));
+const Profile = lazy(() => import("../features/profile/Profile"));
 const ForgotPassword = lazy(
   () => import("../features/auth/pages/ForgotPassword"),
 );
@@ -56,12 +56,12 @@ const routes = [
         element: <Overview />,
       },
       {
-        path: "monthly",
-        element: <Monthly />,
+        path: "budget",
+        element: <Budget />,
       },
       {
-        path: "yearly",
-        element: <Yearly />,
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },

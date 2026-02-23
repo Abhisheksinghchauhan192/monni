@@ -1,6 +1,6 @@
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../../api/auth.api";
+import { loginUser } from "../services/auth.api";
 import { useToast } from "../../../context/ToastContext";
 import useForm from "../../../hooks/useForm";
 import { loginSchema } from "../schemas/login.schema";
