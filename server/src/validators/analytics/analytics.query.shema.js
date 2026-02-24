@@ -1,24 +1,13 @@
 import { z } from "zod";
 
-export const dateRangeSchema = z.object({
-  from: z.string().optional(),
-  to: z.string().optional(),
-});
+export const dashboardQuerySchema = z.object({
+  mode: z.enum(["overall", "monthly", "yearly", "custom"]),
 
-export const breakdownSchema = z.object({
+  year: z.coerce.number().optional(),
+  month: z.coerce.number().optional(),
+
   from: z.string().optional(),
   to: z.string().optional(),
+
   by: z.enum(["category", "payment_method"]),
-});
-
-export const trendSchema = z.object({
-  from: z.string().optional(),
-  to: z.string().optional(),
-  interval: z.enum(["day", "month"]).default("month"),
-});
-
-export const dashboardSchema = z.object({
-  from: z.string().optional(),
-  to: z.string().optional(),
-  by: z.enum(["category", "payment_method"]).default("category"),
 });
