@@ -8,8 +8,17 @@ export default function useDashboardFilter() {
     year: currentYear,
     fromDate: null,
     toDate: null,
+    breakdownBy:"category",
   });
 
+ 
+
+  const updateBreakdown = useCallback((by)=>{
+    setFilter((prev)=>({
+      ...prev,
+      breakdownBy:by,
+    }))
+  })
   const updateMode = useCallback((mode) => {
     setFilter((prev) => ({
       ...prev,
@@ -31,5 +40,6 @@ export default function useDashboardFilter() {
     filter,
     updateMode,
     updateField,
+    updateBreakdown
   };
 }

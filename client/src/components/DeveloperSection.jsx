@@ -8,7 +8,7 @@ export default function DeveloperSection() {
       ref={ref}
       className={`pb-16 px-4 bg-gray-50 dark:bg-gray-900  flex items-center justify-center transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
     >
-      <div className="relative mt-14 rounded-2xl p-[2px] max-w-4xl shine-border">
+      <div className="relative mt-14 rounded-2xl p-0.5 max-w-4xl shine-border">
         <div
           className="bg-white dark:bg-gray-950
                rounded-2xl p-10 
