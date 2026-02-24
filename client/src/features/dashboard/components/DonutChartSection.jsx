@@ -1,20 +1,33 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { useState, useMemo } from "react";
 
 const COLORS = [
-  "#10B981", // emerald
-  "#3B82F6", // blue
-  "#F59E0B", // amber
-  "#EF4444", // red
-  "#8B5CF6", // purple
-  "#14B8A6", // teal
+  "#10B981",
+  "#3B82F6",
+  "#F59E0B",
+  "#EF4444",
+  "#8B5CF6",
+  "#14B8A6",
 ];
 
 export default function DonutChartSection({ breakdown = [] }) {
-  if (!breakdown || breakdown.length === 0) {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const totalAmount = useMemo(() => {
+    return breakdown.reduce((sum, item) => sum + Number(item.total), 0);
+  }, [breakdown]);
+
+  if (!breakdown.length) {
     return (
       <div className="bg-white dark:bg-gray-900 
                       border border-gray-200 dark:border-gray-800 
-                      rounded-2xl p-6 shadow-sm h-80 
+                      rounded-2xl p-6 shadow-sm h-[360px]
                       flex items-center justify-center">
         <p className="text-gray-400 text-sm">
           No breakdown data available.
@@ -24,37 +37,115 @@ export default function DonutChartSection({ breakdown = [] }) {
   }
 
   return (
-    <div
-      className="bg-white dark:bg-gray-900 
-                 border border-gray-200 dark:border-gray-800 
-                 rounded-2xl p-6 shadow-sm"
-    >
-      <h3 className="text-lg font-semibold mb-6">
-        Spending Breakdown
-      </h3>
+    <div className="bg-white dark:bg-gray-900 
+                    border border-gray-200 dark:border-gray-800 
+                    rounded-2xl p-6 shadow-sm space-y-6">
 
-      <div className="w-full h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={breakdown}
-              dataKey="total"
-              nameKey="label"
-              innerRadius={70}
-              outerRadius={110}
-              paddingAngle={3}
-              labelLine={false}
-            >
-              {breakdown.map((entry, index) => (
-                <Cell
+      {/* Section Header */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Spending Breakdown
+        </h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Distribution of expenses across selected period
+        </p>
+      </div>
+
+      {/* Layout */}
+      <div className="grid lg:grid-cols-2 gap-8 items-start">
+
+        {/* Donut */}
+        <div className="relative h-[280px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={breakdown}
+                dataKey="total"
+                nameKey="label"
+                innerRadius={70}
+                outerRadius={110}
+                paddingAngle={3}
+                onMouseEnter={(_, index) => setActiveIndex(index)}
+                onMouseLeave={() => setActiveIndex(null)}
+              >
+                {breakdown.map((entry, index) => (
+                  <Cell
+                    key={index}
+                    fill={COLORS[index % COLORS.length]}
+                    opacity={
+                      activeIndex === null || activeIndex === index
+                        ? 1
+                        : 0.35
+                    }
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value) =>
+                  `₹ ${Number(value).toLocaleString()}`
+                }
+              />
+            </PieChart>
+          </ResponsiveContainer>
+
+          {/* Center Total */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span className="text-xs text-gray-500">Total</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-gray-100">
+              ₹ {totalAmount.toLocaleString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Premium Grid Legend */}
+        <div className="max-h-[280px] overflow-y-auto pr-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+            {breakdown.map((item, index) => {
+              const percent = (
+                (item.total / totalAmount) *
+                100
+              ).toFixed(1);
+
+              return (
+                <div
                   key={index}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onMouseLeave={() => setActiveIndex(null)}
+                  className="flex items-center justify-between
+                             px-3 py-2 rounded-lg
+                             bg-gray-50 dark:bg-gray-800
+                             transition-all duration-200
+                             hover:shadow-sm cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{
+                        backgroundColor:
+                          COLORS[index % COLORS.length],
+                      }}
+                    />
+                    <span className="text-xs text-gray-700 dark:text-gray-300 truncate">
+                      {item.label}
+                    </span>
+                  </div>
+
+                  <div className="text-right">
+                    <div className="text-xs font-medium text-gray-900 dark:text-gray-100">
+                      ₹ {Number(item.total).toLocaleString()}
+                    </div>
+                    <div className="text-[10px] text-gray-400">
+                      {percent}%
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+          </div>
+        </div>
+
       </div>
     </div>
   );

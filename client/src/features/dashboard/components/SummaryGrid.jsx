@@ -1,24 +1,72 @@
-export default function SummaryGrid({ summary }) {
-  const average =
-    summary.count > 0 ? (summary.total / summary.count).toFixed(2) : 0;
+import { motion } from "framer-motion";
+import { GrowthBadge } from "./ui/GrowthBadge";
+import {Card} from "./ui/SummaryCard";
 
-  const Card = ({ title, value }) => (
-    <div
-      className="bg-white dark:bg-gray-900 
-                    border border-gray-200 dark:border-gray-800 
-                    rounded-2xl p-6 shadow-sm 
-                    hover:shadow-md transition"
-    >
-      <p className="text-sm text-gray-500">{title}</p>
-      <h3 className="text-2xl font-bold mt-2">{value}</h3>
-    </div>
-  );
+export default function SummaryGrid({ summary, insights }) {
+  const total = Number(summary?.total?.total || 0);
+  const count = Number(summary?.total?.count || 0);
+
+  const average = count > 0 ? total / count : 0;
+
+  const growth = insights?.growthPercentage ?? 0;
+  const highest = insights?.highestExpense ?? 0;
+  const topCategory = insights?.topCategory ?? "—";
+
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-6">
-      <Card title="Total Spend" value={`₹ ${summary.total}`} />
-      <Card title="Total Expenses" value={summary.count} />
-      <Card title="Average Expense" value={`₹ ${average}`} />
+
+      {/* Total Spend */}
+      <Card
+        title="Total Spend"
+        value={total}
+        subtitle="Total amount spent in selected range"
+        extra={<GrowthBadge  growth={growth}/>}
+      />
+
+      {/* Total Transactions */}
+      <Card
+        title="Transactions"
+        value={count}
+        subtitle="Number of recorded expenses"
+      />
+
+      {/* Average Expense */}
+      <Card
+        title="Avg per Expense"
+        value={average}
+        subtitle="Average amount per transaction"
+      />
+
+      {/* Highest Expense */}
+      <Card
+        title="Highest Expense"
+        value={highest}
+        subtitle="Single largest transaction"
+      />
+
+      {/* Top Category */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="bg-linear-to-br from-emerald-500/5 to-transparent
+                   border border-emerald-200 dark:border-emerald-900
+                   rounded-2xl p-6 shadow-sm"
+      >
+        <p className="text-xs text-gray-500 uppercase tracking-wide">
+          Most Frequent Category
+        </p>
+
+        <h3 className="text-xl font-bold mt-3 text-emerald-600">
+          {topCategory}
+        </h3>
+
+        <p className="text-xs text-gray-400 mt-2">
+          Category with highest number of expenses
+        </p>
+      </motion.div>
+
     </div>
   );
 }

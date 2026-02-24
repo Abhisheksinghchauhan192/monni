@@ -14,6 +14,13 @@ export default function Overview() {
   const { filter, updateMode, updateField } = useDashboardFilter();
   const { data, loading, error } = useDashboard(filter);
 
+  // Demo Data For MockInsights.. 
+  const mockInsights = {
+    growthPercentage: 12.4,
+    highestExpense: 5400,
+    topCategory: "Food",
+  };
+
   return (
     <div className="space-y-10">
       {loading && <DashboardSkeleton />}
@@ -42,19 +49,18 @@ export default function Overview() {
           </div>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
             <div className="xl:col-span-2">
-              <DonutChartSection
-                breakdown={data.breakdown}
-              />
+              <DonutChartSection breakdown={data.breakdown} />
             </div>
 
             <div>
-              <SummaryGrid summary={data.summary} />
+              <SummaryGrid
+                summary={data.summary}
+                insights={mockInsights}
+              />{" "}
             </div>
           </div>
 
-          <TrendCharts
-            trend={data.trend}
-          />
+          <TrendCharts trend={data.trend} />
 
           <AddExpenseButton />
         </>
