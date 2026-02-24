@@ -27,7 +27,7 @@ export default function DonutChartSection({ breakdown = [] }) {
     return (
       <div className="bg-white dark:bg-gray-900 
                       border border-gray-200 dark:border-gray-800 
-                      rounded-2xl p-6 shadow-sm h-[360px]
+                      rounded-2xl p-6 shadow-sm h-full
                       flex items-center justify-center">
         <p className="text-gray-400 text-sm">
           No breakdown data available.
@@ -39,10 +39,11 @@ export default function DonutChartSection({ breakdown = [] }) {
   return (
     <div className="bg-white dark:bg-gray-900 
                     border border-gray-200 dark:border-gray-800 
-                    rounded-2xl p-6 shadow-sm space-y-6">
+                    rounded-2xl p-8 shadow-sm 
+                    flex flex-col h-full">
 
-      {/* Section Header */}
-      <div>
+      {/* Header */}
+      <div className="mb-8">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Spending Breakdown
         </h3>
@@ -52,18 +53,18 @@ export default function DonutChartSection({ breakdown = [] }) {
       </div>
 
       {/* Layout */}
-      <div className="grid lg:grid-cols-2 gap-8 items-start">
+      <div className="grid lg:grid-cols-2 gap-10 items-center flex-1">
 
-        {/* Donut */}
-        <div className="relative h-[280px]">
+        {/* Donut Area */}
+        <div className="relative h-80 xl:h-full min-h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={breakdown}
                 dataKey="total"
                 nameKey="label"
-                innerRadius={70}
-                outerRadius={110}
+                innerRadius={80}
+                outerRadius={140}
                 paddingAngle={3}
                 onMouseEnter={(_, index) => setActiveIndex(index)}
                 onMouseLeave={() => setActiveIndex(null)}
@@ -91,16 +92,15 @@ export default function DonutChartSection({ breakdown = [] }) {
           {/* Center Total */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-xs text-gray-500">Total</span>
-            <span className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               ₹ {totalAmount.toLocaleString()}
             </span>
           </div>
         </div>
 
-        {/* Premium Grid Legend */}
-        <div className="max-h-[280px] overflow-y-auto pr-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-
+        {/* Legend */}
+        <div className="max-h-[380px] xl:max-h-full overflow-y-auto pr-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {breakdown.map((item, index) => {
               const percent = (
                 (item.total / totalAmount) *
@@ -113,36 +113,35 @@ export default function DonutChartSection({ breakdown = [] }) {
                   onMouseEnter={() => setActiveIndex(index)}
                   onMouseLeave={() => setActiveIndex(null)}
                   className="flex items-center justify-between
-                             px-3 py-2 rounded-lg
+                             px-4 py-3 rounded-xl
                              bg-gray-50 dark:bg-gray-800
                              transition-all duration-200
-                             hover:shadow-sm cursor-pointer"
+                             hover:shadow-md cursor-pointer"
                 >
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className="w-2.5 h-2.5 rounded-full"
+                      className="w-3 h-3 rounded-full"
                       style={{
                         backgroundColor:
                           COLORS[index % COLORS.length],
                       }}
                     />
-                    <span className="text-xs text-gray-700 dark:text-gray-300 truncate">
+                    <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
                       {item.label}
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <div className="text-xs font-medium text-gray-900 dark:text-gray-100">
+                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       ₹ {Number(item.total).toLocaleString()}
                     </div>
-                    <div className="text-[10px] text-gray-400">
+                    <div className="text-xs text-gray-400">
                       {percent}%
                     </div>
                   </div>
                 </div>
               );
             })}
-
           </div>
         </div>
 

@@ -6,5 +6,5 @@ export async function fetchDashboardAnalytics(params){
         params:params
     })
 
-    return response.data.data;
+    return response.data;
 }

@@ -1,51 +1,43 @@
 import { motion } from "framer-motion";
 import { GrowthBadge } from "./ui/GrowthBadge";
-import {Card} from "./ui/SummaryCard";
+import { Card } from "./ui/SummaryCard";
 
-export default function SummaryGrid({ summary, insights }) {
-  const total = Number(summary?.total?.total || 0);
-  const count = Number(summary?.total?.count || 0);
-
+export default function SummaryGrid({ summary }) {
+  const total = Number(summary?.total || 0);
+  const count = Number(summary?.count || 0);
   const average = count > 0 ? total / count : 0;
-
-  const growth = insights?.growthPercentage ?? 0;
-  const highest = insights?.highestExpense ?? 0;
-  const topCategory = insights?.topCategory ?? "—";
-
+  const growth = summary?.growthPercentage ?? 0;
+  const highest = summary?.highestExpense ?? 0;
+  const topCategory = summary?.topCategory ?? "—";
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-6">
+    <div className="flex flex-col gap-6 w-full">
 
-      {/* Total Spend */}
       <Card
         title="Total Spend"
         value={total}
         subtitle="Total amount spent in selected range"
-        extra={<GrowthBadge  growth={growth}/>}
+        extra={<GrowthBadge growth={growth} />}
       />
 
-      {/* Total Transactions */}
       <Card
         title="Transactions"
         value={count}
         subtitle="Number of recorded expenses"
       />
 
-      {/* Average Expense */}
       <Card
         title="Avg per Expense"
         value={average}
         subtitle="Average amount per transaction"
       />
 
-      {/* Highest Expense */}
       <Card
         title="Highest Expense"
         value={highest}
         subtitle="Single largest transaction"
       />
 
-      {/* Top Category */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
