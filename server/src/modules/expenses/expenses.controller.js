@@ -29,11 +29,17 @@ export const addExpense = asyncHandler(async (req, res) => {
 
 export const getExpenses = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const result = await getExpensesService(userId, req.validatedQuery);
+
+  const { data, nextCursor, hasMore } =
+    await getExpensesService(userId, req.validatedQuery);
 
   res.status(200).json({
     success: true,
-    ...result,
+    expenses: data,
+    pagination: {
+      nextCursor,
+      hasMore,
+    },
   });
 });
 

@@ -52,54 +52,95 @@ export async function deleteExpense(expenseId, userId) {
 
 // get the expense of user with cursor pagination
 export async function getExpensesCursor(userId, options) {
-  const { limit, cursor, category, payment_method, fromDate, toDate } = options;
+  const {
+    limit,
+    cursorDate,
+    cursorId,
+    category,
+    payment_method,
+    fromDate,
+    toDate,
+    search,
+  } = options;
 
   let query = `
-  SELECT * FROM expenses
-  WHERE user_id = ?
+    SELECT *
+    FROM expenses
+    WHERE user_id = ?
   `;
+
   const params = [userId];
 
-  // Cursor Logic ..
-  if (cursor) {
-    query += "AND id < ?";
-    params.push(cursor);
+  // Cursor Logic
+  if (cursorDate && cursorId) {
+    query += `
+      AND (
+        expense_date < ?
+        OR (expense_date = ? AND id < ?)
+      )
+    `;
+    params.push(cursorDate, cursorDate, cursorId);
   }
 
   // Filters
   if (category) {
-    query += "AND category = ?";
+    query += " AND category = ?";
     params.push(category);
   }
+
   if (payment_method) {
-    query += "AND payment_method = ?";
+    query += " AND payment_method = ?";
     params.push(payment_method);
   }
+
   if (fromDate) {
-    query += "AND expense_date >= ?";
+    query += " AND expense_date >= ?";
     params.push(fromDate);
   }
+
   if (toDate) {
-    query += "AND expense_date <= ?";
+    query += " AND expense_date <= ?";
     params.push(toDate);
   }
 
-  // Order + limit
+  if (search) {
+    query += `
+      AND (
+        description LIKE ?
+        OR merchant LIKE ?
+      )
+    `;
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
   query += `
-  ORDER BY id DESC
-  LIMIT ?`;
+    ORDER BY expense_date DESC, id DESC
+    LIMIT ?
+  `;
+
+  if (limit > 100) {
+    limit = 100;
+  }
   params.push(limit);
 
   const [rows] = await pool.query(query, params);
 
-  // Determine Next Cursor
+  const hasMore = rows.length === limit;
 
-  const nextCursor = rows.length === limit ? rows[rows.length - 1].id : null;
+  let nextCursor = null;
+
+  if (hasMore) {
+    const last = rows[rows.length - 1];
+    nextCursor = {
+      cursorDate: last.expense_date,
+      cursorId: last.id,
+    };
+  }
 
   return {
     data: rows,
     nextCursor,
-    hasMore: rows.length === limit,
+    hasMore,
   };
 }
 
