@@ -13,12 +13,10 @@ export default function ExpenseList({
 }) {
   return (
     <div className="space-y-3">
-
       {/* Skeleton on first load */}
-      {loading && expenses.length === 0 &&
-        [...Array(6)].map((_, i) => (
-          <ExpenseCardSkeleton key={i} />
-        ))}
+      {loading &&
+        expenses.length === 0 &&
+        [...Array(6)].map((_, i) => <ExpenseCardSkeleton key={i} />)}
 
       {/* Actual Cards */}
       {expenses.map((exp) => (
@@ -33,7 +31,7 @@ export default function ExpenseList({
       {/* Bottom spinner for pagination */}
       {loading && expenses.length > 0 && (
         <div className="py-4 flex justify-center">
-          <Loader className="animate-spin text-emerald-400"/>
+          <Loader className="animate-spin text-emerald-400" />
         </div>
       )}
 
@@ -41,9 +39,9 @@ export default function ExpenseList({
       <SentinelLoader
         hasMore={hasMore}
         loading={loading}
-        onVisible={fetchExpenses}
+        onVisible={() => fetchExpenses(false)}
+        itemsLength={expenses.length}
       />
-
     </div>
   );
 }

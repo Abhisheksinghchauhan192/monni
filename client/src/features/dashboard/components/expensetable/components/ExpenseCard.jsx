@@ -127,7 +127,7 @@ export default function ExpenseCard({ expense, onOpen, onEdit }) {
             </p>
 
             <p className="text-xs text-gray-400 mt-1">
-              {new Date(expense.expense_date).toLocaleDateString()}
+              {new Date(expense.expense_date).toDateString()}
             </p>
           </div>
 

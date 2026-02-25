@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState ,useMemo} from "react";
 import TableFilterBar from "./expensetable/TableFilterBar";
 import ExpenseTable from "./expensetable/ExpenseTable";
+import useCategories from "../../../hooks/useCategories";
 
 export default function ExpenseSection() {
   const [filters, setFilters] = useState({
@@ -11,6 +12,18 @@ export default function ExpenseSection() {
     toDate: "",
   });
 
+  const stableFilters = useMemo(
+    () => filters,
+    [
+      filters.search,
+      filters.category,
+      filters.payment_method,
+      filters.fromDate,
+      filters.toDate,
+    ],
+  );
+
+  const { categories } = useCategories();
   return (
     <div
       className="bg-white dark:bg-gray-900 
@@ -23,10 +36,14 @@ export default function ExpenseSection() {
         <h3 className="text-lg font-semibold">Recent Expenses</h3>
       </div>
 
-      <TableFilterBar filters={filters} setFilters={setFilters} />
+      <TableFilterBar
+        filters={filters}
+        setFilters={setFilters}
+        categories={categories}
+      />
 
       <div className="flex-1 min-h-0">
-        <ExpenseTable filters={filters} />
+        <ExpenseTable filters={stableFilters} categories={categories} />
       </div>
     </div>
   );

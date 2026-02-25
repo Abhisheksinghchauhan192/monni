@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, X } from "lucide-react";
+import {PAYMENT_METHODS} from "../../../../constants/paymentMethods";
 
-export default function TableFilterBar({ filters, setFilters }) {
+export default function TableFilterBar({ filters, setFilters,categories}) {
   const [localSearch, setLocalSearch] = useState(filters.search);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -11,7 +12,7 @@ export default function TableFilterBar({ filters, setFilters }) {
         ...prev,
         search: localSearch,
       }));
-    }, 400);
+    }, 600);
 
     return () => clearTimeout(timer);
   }, [localSearch]);
@@ -58,9 +59,7 @@ export default function TableFilterBar({ filters, setFilters }) {
                        border border-gray-200 dark:border-gray-700"
           >
             <option value="">Category</option>
-            <option value="Food">Food</option>
-            <option value="Travel">Travel</option>
-            <option value="Groceries">Groceries</option>
+            {categories.map(c=><option value={c} key={c}>{c}</option>)}
           </select>
 
           <select
@@ -76,9 +75,11 @@ export default function TableFilterBar({ filters, setFilters }) {
                        border border-gray-200 dark:border-gray-700"
           >
             <option value="">Payment</option>
-            <option value="UPI">UPI</option>
-            <option value="Card">Card</option>
-            <option value="Cash">Cash</option>
+            {
+                PAYMENT_METHODS.map(m=><option value={m} key={m}>
+                  {m}
+                </option>)
+            }
           </select>
         </div>
 

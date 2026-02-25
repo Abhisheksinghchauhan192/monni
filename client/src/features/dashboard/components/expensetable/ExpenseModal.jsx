@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { is } from "zod/locales";
+import { PAYMENT_METHODS } from "../../../../constants/paymentMethods";
 
 export default function ExpenseModal({
   expense,
   onClose,
   onDelete,
   onSave,
+  categories,
   editMode = false,
 }) {
   const [isEditing, setIsEditing] = useState(editMode);
@@ -135,9 +136,7 @@ export default function ExpenseModal({
                            bg-gray-50 dark:bg-zinc-800
                            border border-gray-200 dark:border-zinc-700"
               >
-                <option value="Food">Food</option>
-                <option value="Travel">Travel</option>
-                <option value="Groceries">Groceries</option>
+                {categories.map(c=><option value={c}>{c}</option>)}
               </select>
             </div>
 
@@ -151,9 +150,9 @@ export default function ExpenseModal({
                            bg-gray-50 dark:bg-zinc-800
                            border border-gray-200 dark:border-zinc-700"
               >
-                <option value="UPI">UPI</option>
-                <option value="Card">Card</option>
-                <option value="Cash">Cash</option>
+                {
+                  PAYMENT_METHODS.map(m=><option value={m}>{m}</option>)
+                }
               </select>
             </div>
           </div>

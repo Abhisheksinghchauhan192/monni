@@ -1,10 +1,16 @@
 import { useEffect, useRef } from "react";
 
-export default function SentinelLoader({ onVisible, hasMore, loading }) {
+export default function SentinelLoader({
+  onVisible,
+  hasMore,
+  loading,
+  itemsLength,
+}) {
   const ref = useRef(null);
 
   useEffect(() => {
     if (!hasMore || loading) return;
+    if (itemsLength === 0) return; // prevent first mount trigger
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -15,16 +21,12 @@ export default function SentinelLoader({ onVisible, hasMore, loading }) {
       { threshold: 1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    if (ref.current) observer.observe(ref.current);
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      if (ref.current) observer.unobserve(ref.current);
     };
-  }, [hasMore, loading, onVisible]);
+  }, [hasMore, loading, onVisible, itemsLength]);
 
   return <div ref={ref} className="h-10" />;
 }

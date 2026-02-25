@@ -1,60 +1,62 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fetchExpenseTable } from "../services/expenses.api";
 
 export default function useExpenses(filters) {
   const [expenses, setExpenses] = useState([]);
-  const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const fetchExpenses = useCallback(
-    async (reset = false) => {
-      if (loading) return;
-      if (!hasMore && !reset) return;
+  const cursorRef = useRef(null);
 
-      try {
-        setLoading(true);
+  const fetchExpenses = async (reset = false) => {
+    if (loading) return;
+    if (!hasMore && !reset) return;
 
-        const params = {
-          limit: 10,
-          ...filters,
-          ...(reset ? {} : cursor),
-        };
+    try {
+      setLoading(true);
 
-        const res = await fetchExpenseTable(params);
+      const cleanFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, v]) => v !== "" && v != null),
+      );
 
-        const newExpenses = res.expenses;
-        const nextCursor = res.pagination.nextCursor;
-        const more = res.pagination.hasMore;
+      const params = {
+        limit: 10,
+        ...cleanFilters,
+        ...(reset ? {} : cursorRef.current),
+      };
 
-        setExpenses((prev) =>
-          reset ? newExpenses : [...prev, ...newExpenses]
-        );
+      const res = await fetchExpenseTable(params);
 
-        setCursor(nextCursor);
-        setHasMore(more);
-      } catch (err) {
-        console.error("Fetch failed:", err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [filters, cursor, hasMore, loading]
-  );
+      const newExpenses = res.expenses;
+      const nextCursor = res.pagination.nextCursor;
+      const more = res.pagination.hasMore;
+
+      setExpenses((prev) => (reset ? newExpenses : [...prev, ...newExpenses]));
+
+      cursorRef.current = nextCursor;
+      setHasMore(more);
+    } catch (err) {
+      console.error("Fetch failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const serializedFilters = JSON.stringify(filters);
 
   useEffect(() => {
+    cursorRef.current = null;
     setExpenses([]);
-    setCursor(null);
     setHasMore(true);
 
-    fetchExpenses(true); // reset mode
-  }, [filters]);
+    fetchExpenses(true);
+  }, [serializedFilters]);
 
   return {
     expenses,
     fetchExpenses,
     hasMore,
     loading,
-    setExpenses, // for optimistic updates
+    setExpenses,
   };
 }
