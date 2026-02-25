@@ -8,7 +8,7 @@ export default function AIInsights({ insights, loading }) {
                  border border-emerald-200/50 dark:border-emerald-500/20
                  rounded-2xl shadow-sm 
                  p-5 
-                 h-[420px] 
+                 h-105 
                  flex flex-col"
     >
       {/* Subtle glow */}
