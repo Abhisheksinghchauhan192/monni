@@ -463,6 +463,7 @@ The goal is maintainable, extensible architecture.
 **MoNNi** is designed and developed by:
 
 **Abhishek Singh Chauhan**
+
 Full-Stack Developer | Backend-Focused Engineer 
 
 This project reflects a strong focus on:
