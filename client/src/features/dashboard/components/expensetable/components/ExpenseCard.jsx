@@ -1,11 +1,7 @@
 import { useRef, useState } from "react";
 import { Pencil } from "lucide-react";
 
-export default function ExpenseCard({
-  expense,
-  onOpen,
-  onEdit,
-}) {
+export default function ExpenseCard({ expense, onOpen, onEdit }) {
   const clickTimeout = useRef(null);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
@@ -83,14 +79,10 @@ export default function ExpenseCard({
   };
 
   // Progressive emerald reveal
-  const progress = Math.min(
-    1,
-    Math.abs(translateX) / Math.abs(MAX_SWIPE)
-  );
+  const progress = Math.min(1, Math.abs(translateX) / Math.abs(MAX_SWIPE));
 
   return (
     <div className="relative overflow-hidden rounded-xl">
-
       {/* Background Layer */}
       <div
         className="absolute inset-0 flex justify-end items-center pr-6 text-white"
@@ -109,14 +101,12 @@ export default function ExpenseCard({
 
       {/* Sliding Card */}
       <div
-        className={`bg-white dark:bg-zinc-900 p-4 rounded-xl cursor-pointer
-          transition-all duration-200 ease-out
-          ${
-            isSwiping
-              ? "shadow-2xl scale-[0.985]"
-              : "shadow-md"
-          }
-        `}
+        className={`bg-white dark:bg-zinc-900 
+    p-4 rounded-2xl cursor-pointer
+    border border-gray-200 dark:border-zinc-800
+    transition-all duration-200 ease-out
+    ${isSwiping ? "shadow-2xl scale-[0.985]" : "shadow-sm hover:shadow-md"}
+  `}
         style={{
           transform: `translateX(${translateX}px)`,
         }}
@@ -125,19 +115,30 @@ export default function ExpenseCard({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="flex justify-between">
-          <div>
-            <h3 className="font-semibold">
+        <div className="flex justify-between items-start">
+          {/* Left */}
+          <div className="flex flex-col">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 ">
               {expense.description}
             </h3>
-            <p className="text-sm text-gray-500">
-              {expense.category}
+
+            <p className="text-xs text-gray-500 mt-1">
+              {expense.category} • {expense.payment_method}
+            </p>
+
+            <p className="text-xs text-gray-400 mt-1">
+              {new Date(expense.expense_date).toLocaleDateString()}
             </p>
           </div>
 
-          <p className="font-bold">
-            ₹ {expense.amount}
-          </p>
+          {/* Right */}
+          <div className="text-right">
+            <p className="text-lg font-bold text-emerald-600">
+              ₹ {Number(expense.amount).toFixed(2)}
+            </p>
+
+            <p className="text-xs text-gray-400">{expense.merchant}</p>
+          </div>
         </div>
       </div>
     </div>

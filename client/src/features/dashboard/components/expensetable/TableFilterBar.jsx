@@ -1,39 +1,154 @@
-export default function TableFilterBar() {
+import { useState, useEffect } from "react";
+import { ChevronDown, X } from "lucide-react";
+
+export default function TableFilterBar({ filters, setFilters }) {
+  const [localSearch, setLocalSearch] = useState(filters.search);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        search: localSearch,
+      }));
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [localSearch]);
+
+  const clearFilters = () => {
+    setLocalSearch("");
+    setFilters({
+      search: "",
+      category: "",
+      payment_method: "",
+      fromDate: "",
+      toDate: "",
+    });
+  };
+
   return (
-    <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 
-                    flex flex-col sm:flex-row gap-3">
+    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 space-y-3">
+      {/* Top Row */}
+      <div className="flex flex-col gap-3">
+        {/* Search */}
+        <input
+          type="text"
+          placeholder="Search by description or merchant..."
+          value={localSearch}
+          onChange={(e) => setLocalSearch(e.target.value)}
+          className="w-full px-4 py-2 rounded-xl 
+                     bg-gray-50 dark:bg-gray-800
+                     border border-gray-200 dark:border-gray-700
+                     text-sm focus:ring-2 focus:ring-emerald-500"
+        />
 
-      <input
-        type="text"
-        placeholder="Search merchant..."
-        className="px-4 py-2 rounded-xl 
-                   bg-gray-50 dark:bg-gray-800
-                   border border-gray-200 dark:border-gray-700
-                   text-sm flex-1"
-      />
+        {/* Compact Grid Filters */}
+        <div className="grid grid-cols-2 gap-3">
+          <select
+            value={filters.category}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                category: e.target.value,
+              }))
+            }
+            className="px-3 py-2 rounded-xl text-sm
+                       bg-gray-50 dark:bg-gray-800
+                       border border-gray-200 dark:border-gray-700"
+          >
+            <option value="">Category</option>
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Groceries">Groceries</option>
+          </select>
 
-      <select
-        className="px-4 py-2 rounded-xl 
-                   bg-gray-50 dark:bg-gray-800
-                   border border-gray-200 dark:border-gray-700
-                   text-sm"
-      >
-        <option>All Categories</option>
-        <option>Food</option>
-        <option>Travel</option>
-      </select>
+          <select
+            value={filters.payment_method}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                payment_method: e.target.value,
+              }))
+            }
+            className="px-3 py-2 rounded-xl text-sm
+                       bg-gray-50 dark:bg-gray-800
+                       border border-gray-200 dark:border-gray-700"
+          >
+            <option value="">Payment</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Card</option>
+            <option value="Cash">Cash</option>
+          </select>
+        </div>
 
-      <select
-        className="px-4 py-2 rounded-xl 
-                   bg-gray-50 dark:bg-gray-800
-                   border border-gray-200 dark:border-gray-700
-                   text-sm"
-      >
-        <option>All Payments</option>
-        <option>UPI</option>
-        <option>Card</option>
-      </select>
+        {/* Advanced Toggle */}
+        <button
+          onClick={() => setShowAdvanced((prev) => !prev)}
+          className="flex items-center justify-center gap-2 
+                     text-xs text-gray-500 hover:text-emerald-600"
+        >
+          Advanced Filters
+          <ChevronDown
+            size={14}
+            className={`transition-transform ${
+              showAdvanced ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
+        {/* Advanced Grid */}
+        {showAdvanced && (
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col">
+              <label className="text-xs text-gray-500 mb-1">From</label>
+              <input
+                type="date"
+                value={filters.fromDate}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    fromDate: e.target.value,
+                  }))
+                }
+                className="px-3 py-2 rounded-xl text-sm
+           bg-gray-50 dark:bg-gray-800
+           border border-gray-200 dark:border-gray-700
+           focus:ring-2 focus:ring-emerald-500
+           appearance-none"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs text-gray-500 mb-1">To</label>
+              <input
+                type="date"
+                value={filters.toDate}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    toDate: e.target.value,
+                  }))
+                }
+                className="px-3 py-2 rounded-xl text-sm
+           bg-gray-50 dark:bg-gray-800
+           border border-gray-200 dark:border-gray-700
+           focus:ring-2 focus:ring-emerald-500
+           appearance-none"
+              />
+            </div>
+
+            <button
+              onClick={clearFilters}
+              className="col-span-2 py-2 rounded-xl text-sm
+                         bg-red-50 text-red-600
+                         dark:bg-red-900/30 dark:text-red-400"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

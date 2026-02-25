@@ -56,7 +56,7 @@ export default function DonutChartSection({ breakdown = [] }) {
       <div className="grid lg:grid-cols-2 gap-10 items-center flex-1">
 
         {/* Donut Area */}
-        <div className="relative h-80 xl:h-full min-h-[320px]">
+        <div className="relative h-80 xl:h-full min-h-80">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -99,7 +99,7 @@ export default function DonutChartSection({ breakdown = [] }) {
         </div>
 
         {/* Legend */}
-        <div className="max-h-[380px] xl:max-h-full overflow-y-auto pr-2">
+        <div className="max-h-95 xl:max-h-full overflow-y-auto pr-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {breakdown.map((item, index) => {
               const percent = (
