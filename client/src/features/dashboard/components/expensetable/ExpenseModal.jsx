@@ -11,13 +11,18 @@ export default function ExpenseModal({
   editMode = false,
 }) {
   const [isEditing, setIsEditing] = useState(editMode);
-  const [formData, setFormData] = useState(expense);
+  const [formData, setFormData] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  useEffect(() => {
-    setFormData(expense);
-    setIsEditing(editMode);
-  }, [expense, editMode]);
 
+  useEffect(() => {
+    if (expense) {
+      setFormData(expense);
+      setIsEditing(editMode);
+    } else {
+      setFormData(null);
+      setIsEditing(false);
+    }
+  }, [expense, editMode]);
   useEffect(() => {
     if (expense) {
       document.body.style.overflow = "hidden";
@@ -28,7 +33,7 @@ export default function ExpenseModal({
     };
   }, [expense]);
 
-  if (!expense) return null;
+  if (!expense || !formData) return null;
 
   const handleChange = (e) => {
     setFormData({
@@ -136,7 +141,11 @@ export default function ExpenseModal({
                            bg-gray-50 dark:bg-zinc-800
                            border border-gray-200 dark:border-zinc-700"
               >
-                {categories.map(c=><option value={c}>{c}</option>)}
+                {categories.map((c) => (
+                  <option value={c} key={c}>
+                    {c}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -150,9 +159,11 @@ export default function ExpenseModal({
                            bg-gray-50 dark:bg-zinc-800
                            border border-gray-200 dark:border-zinc-700"
               >
-                {
-                  PAYMENT_METHODS.map(m=><option value={m}>{m}</option>)
-                }
+                {PAYMENT_METHODS.map((m) => (
+                  <option value={m} key={m}>
+                    {m}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -217,7 +228,7 @@ export default function ExpenseModal({
 
                 <button
                   onClick={() => {
-                    onDelete(expense)
+                    onDelete(expense);
                     setConfirmDelete(false);
                   }}
                   className="px-4 py-2 rounded-xl 
