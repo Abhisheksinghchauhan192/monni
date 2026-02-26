@@ -4,9 +4,10 @@ import {
   getExpensesCursor,
   getExpensesForExport,
   updateExpense,
+  getDistinctCategories,
 } from "./expense.model.js";
 
-import  ApiError  from "../../errors/ApiError.js";
+import ApiError from "../../errors/ApiError.js";
 
 // Add Expense
 export async function addExpenseService(userId, expenseData) {
@@ -35,4 +36,9 @@ export async function updateExpenseService(userId, expenseId, updates) {
 // Export Expenses Service
 export async function getExportExpensesService(userId, from, to) {
   return await getExpensesForExport(userId, from, to);
+}
+
+// Get Expense Categoris
+export async function getCategoriesService(userId) {
+  return await getDistinctCategories(userId);
 }

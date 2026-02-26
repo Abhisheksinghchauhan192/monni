@@ -14,6 +14,7 @@ import {
   exportExpenses,
   exportToExcel,
   exportToPdf,
+  getCategories,
 } from "./expenses.controller.js";
 
 const router = Router();
@@ -54,6 +55,14 @@ router.get(
   authMiddleWare,
   validateQuery(expenseExportSchema),
   exportToPdf,
+);
+
+// get categories api
+
+router.get(
+  "/categories",
+   authMiddleWare,
+   getCategories,
 );
 
 export default router;

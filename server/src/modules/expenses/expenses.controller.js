@@ -4,6 +4,7 @@ import {
   getExpensesService,
   updateExpenseService,
   getExportExpensesService,
+  getCategoriesService,
 } from "./expense.service.js";
 
 import { stringify } from "csv-stringify/sync";
@@ -30,8 +31,10 @@ export const addExpense = asyncHandler(async (req, res) => {
 export const getExpenses = asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
-  const { data, nextCursor, hasMore } =
-    await getExpensesService(userId, req.validatedQuery);
+  const { data, nextCursor, hasMore } = await getExpensesService(
+    userId,
+    req.validatedQuery,
+  );
 
   res.status(200).json({
     success: true,
@@ -154,3 +157,14 @@ export async function exportToPdf(req, res, next) {
     next(err);
   }
 }
+
+// Get Categories of user
+export const getCategories = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const categories = await getCategoriesService(userId);
+
+  res.status(200).json({
+    success: true,
+    categories,
+  });
+});

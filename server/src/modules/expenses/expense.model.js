@@ -190,3 +190,19 @@ export async function getExpensesForExport(userId, from, to) {
 
   return rows;
 }
+
+// Fetch Categories of User from the databasee..
+export async function getDistinctCategories(userId) {
+  const [rows] = await pool.query(
+    `
+    SELECT DISTINCT category
+    FROM expenses
+    WHERE user_id = ?
+      AND category IS NOT NULL
+      AND category <> ''
+    ORDER BY category ASC
+    `,
+    [userId],
+  );
+  return rows.map((r) => r.category);
+}
