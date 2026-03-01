@@ -221,7 +221,7 @@ export default function ExpenseModal({
                 <button
                   onClick={() => setConfirmDelete(false)}
                   className="px-4 py-2 rounded-xl 
-                     bg-gray-100 dark:bg-zinc-800"
+                     bg-gray-100 dark:bg-zinc-800 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -232,7 +232,7 @@ export default function ExpenseModal({
                     setConfirmDelete(false);
                   }}
                   className="px-4 py-2 rounded-xl 
-                     bg-red-600 text-white"
+                     bg-red-600 text-white cursor-pointer"
                 >
                   Yes, Delete
                 </button>
@@ -244,7 +244,7 @@ export default function ExpenseModal({
               <button
                 onClick={() => setIsEditing(false)}
                 className="px-4 py-2 rounded-xl 
-                   bg-gray-100 dark:bg-zinc-800"
+                   bg-gray-100 dark:bg-zinc-800  cursor-pointer"
               >
                 Cancel
               </button>
@@ -253,7 +253,7 @@ export default function ExpenseModal({
                 onClick={handleSave}
                 className="px-5 py-2 rounded-xl 
                    bg-emerald-600 text-white
-                   hover:bg-emerald-700 transition"
+                   hover:bg-emerald-700 transition cursor-pointer"
               >
                 Save Changes
               </button>
@@ -264,7 +264,7 @@ export default function ExpenseModal({
               <button
                 onClick={() => setIsEditing(true)}
                 className="px-5 py-2 rounded-xl 
-                   bg-gray-100 dark:bg-zinc-800"
+                   bg-gray-100 dark:bg-zinc-800 cursor-pointer"
               >
                 Edit
               </button>
@@ -273,7 +273,8 @@ export default function ExpenseModal({
                 onClick={() => setConfirmDelete(true)}
                 className="px-5 py-2 rounded-xl 
                    bg-red-50 text-red-600
-                   dark:bg-red-900/30 dark:text-red-400"
+                   dark:bg-red-900/30 dark:text-red-400
+                   cursor-pointer"
               >
                 Delete
               </button>

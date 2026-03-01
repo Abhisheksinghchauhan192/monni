@@ -50,7 +50,7 @@ export default function useCategories() {
     if (categories.includes(trimmed))
       return { error: "Already exists" };
     if (customCategories.length >= MAX_CUSTOM_CATEGORIES)
-      return { error: "Limit reached" };
+      return { error: "Custom Category Limit Reached !" };
 
     setCustomCategories((prev) => [...prev, trimmed]);
     return { success: true };

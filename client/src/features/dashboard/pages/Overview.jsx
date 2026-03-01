@@ -7,7 +7,6 @@ export default function Overview() {
     <div className="space-y-10">
       <TopSection />
       <AnalyticsSection />
-      <AddExpenseButton />
     </div>
   );
 }
