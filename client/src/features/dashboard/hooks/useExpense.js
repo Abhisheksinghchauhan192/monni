@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchExpenseTable } from "../services/expenses.api";
 
-export default function useExpenses(filters) {
+export default function useExpenses(filters = {}) {
   const [expenses, setExpenses] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -15,23 +15,30 @@ export default function useExpenses(filters) {
     try {
       setLoading(true);
 
+      // Ensure filters are always an object 
+      const safeFilters = filters || {};
+
       const cleanFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v !== "" && v != null),
+        Object.entries(safeFilters).filter(
+          ([_, v]) => v !== "" && v != null
+        )
       );
 
       const params = {
         limit: 10,
         ...cleanFilters,
-        ...(reset ? {} : cursorRef.current),
+        ...(reset ? {} : cursorRef.current || {}),
       };
 
       const res = await fetchExpenseTable(params);
 
-      const newExpenses = res.expenses;
-      const nextCursor = res.pagination.nextCursor;
-      const more = res.pagination.hasMore;
+      const newExpenses = res?.expenses || [];
+      const nextCursor = res?.pagination?.nextCursor || null;
+      const more = res?.pagination?.hasMore ?? false;
 
-      setExpenses((prev) => (reset ? newExpenses : [...prev, ...newExpenses]));
+      setExpenses((prev) =>
+        reset ? newExpenses : [...prev, ...newExpenses]
+      );
 
       cursorRef.current = nextCursor;
       setHasMore(more);
@@ -42,7 +49,7 @@ export default function useExpenses(filters) {
     }
   };
 
-  const serializedFilters = JSON.stringify(filters);
+  const serializedFilters = JSON.stringify(filters || {});
 
   useEffect(() => {
     cursorRef.current = null;

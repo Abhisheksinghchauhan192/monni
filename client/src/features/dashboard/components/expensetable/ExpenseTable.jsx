@@ -1,12 +1,15 @@
 import { useState } from "react";
-import useExpenses from "../../hooks/useExpense";
 import ExpenseList from "./ExpenseList";
 import ExpenseModal from "./ExpenseModal";
 
-export default function ExpenseTable({ filters,categories}) {
-  const { expenses, fetchExpenses, hasMore, loading, setExpenses } =
-    useExpenses(filters);
-
+export default function ExpenseTable({
+  expenses,
+  fetchExpenses,
+  hasMore,
+  loading,
+  setExpenses,
+  categories,
+}) {
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -38,7 +41,7 @@ export default function ExpenseTable({ filters,categories}) {
         }}
         onSave={(updated) => {
           setExpenses((prev) =>
-            prev.map((e) => (e.id === updated.id ? updated : e)),
+            prev.map((e) => (e.id === updated.id ? updated : e))
           );
           setSelectedExpense(null);
         }}
