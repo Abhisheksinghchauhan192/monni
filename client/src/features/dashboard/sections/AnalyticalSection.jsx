@@ -1,5 +1,5 @@
 import FilterBar from "../components/FilterBar";
-import DonutChartSection from "../components/DonutChartSection";
+import DonutChartSection from "./DonutChartSection";
 import SummaryGrid from "../components/SummaryGrid";
 import TrendCharts from "../components/TrendCharts";
 import useDashboardFilter from "../hooks/useDashboardFilter";

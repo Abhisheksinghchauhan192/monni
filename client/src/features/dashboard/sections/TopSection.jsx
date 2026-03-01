@@ -1,5 +1,5 @@
 import AIInsights from "../components/AIInsights";
-import ExpenseSection from "../components/ExpenseSection";
+import ExpenseSection from "./ExpenseSection";
 export default function TopSection() {
   return (
     <div className="grid lg:grid-cols-3 gap-8 items-start">

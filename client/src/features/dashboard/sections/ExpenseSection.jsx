@@ -1,6 +1,6 @@
 import { useState ,useMemo} from "react";
-import TableFilterBar from "./expensetable/TableFilterBar";
-import ExpenseTable from "./expensetable/ExpenseTable";
+import TableFilterBar from "../components/expensetable/TableFilterBar";
+import ExpenseTable from "../components/expensetable/ExpenseTable";
 import useCategories from "../../../hooks/useCategories";
 
 export default function ExpenseSection() {
