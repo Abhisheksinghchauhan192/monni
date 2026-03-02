@@ -56,6 +56,11 @@ export default function ExpenseSection() {
       </div>
 
       {/* Filters */}
+      <TableFilterBar
+      filters={filters}
+      setFilters={setFilters}
+      categories={categories}
+      />
       <ExpenseTable
         expenses={expenses}
         fetchExpenses={fetchExpenses}
