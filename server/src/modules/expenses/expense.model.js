@@ -1,4 +1,5 @@
 import pool from "../../config/database.js";
+import { exportExpenses } from "./expenses.controller.js";
 
 export async function createExpense(userId, expense) {
   const {
@@ -42,12 +43,13 @@ export async function createExpense(userId, expense) {
 // }
 
 export async function deleteExpense(expenseId, userId) {
-  await pool.query(
+  const [result] = await pool.query(
     `
         DELETE FROM expenses
         WHERE id = ? AND user_id = ? `,
     [expenseId, userId],
   );
+  return result.affectedRows>0;
 }
 
 // get the expense of user with cursor pagination

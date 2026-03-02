@@ -17,3 +17,13 @@ export async function createExpense(payload){
   const res = await http.post("/expenses",payload);
   return res.data;
 }
+
+export async function deleteExpenseApi(id){
+  const res = await http.delete(`/expenses/${id}`);
+  return res.message;
+} 
+
+export async function updateExpenseApi(id,payload){
+  const res = await http.put(`/expenses/${id}`,payload);
+  return res.message;
+}

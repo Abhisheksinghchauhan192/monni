@@ -20,8 +20,11 @@ export async function getExpensesService(userId, queryOptions) {
   return await getExpensesCursor(userId, queryOptions);
 }
 // Delete Expense
-export async function deleteExpenseService(userId, expenseId) {
-  await deleteExpense(expenseId, userId);
+export async function deleteExpenseService(expenseId, userId) {
+  const success = await deleteExpense(expenseId, userId);
+  if(!success){
+    throw new ApiError(404,"Expense Not Found");
+  }
 }
 
 //Update Expense

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const addExpenseSchema = z.object({
+export const expenseUpdateSchema = z.object({
   description: z
     .string()
     .trim()
@@ -24,3 +24,4 @@ export const addExpenseSchema = z.object({
     .string()
     .min(1, "Please select how you paid for this expense."),
 });
+
