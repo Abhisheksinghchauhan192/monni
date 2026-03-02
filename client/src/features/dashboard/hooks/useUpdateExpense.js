@@ -9,8 +9,8 @@ export default function useUpdateExpense() {
       const payload = {
         ...values,
         description:values.description.trim(),
-        amount:values.amount.trim(),
-        merchant:values.amount.trim(),
+        amount:values.amount,
+        merchant:values.merchant.trim(),
       }
       await updateExpenseApi(id, payload);
       addToast("Expense updated successfully", "success");
