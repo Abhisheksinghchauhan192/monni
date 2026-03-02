@@ -3,8 +3,12 @@ import { z } from "zod";
 export const addExpenseSchema = z.object({
   description: z
     .string()
-    .min(2, "Please provide a brief description (at least 2 characters)."),
-  merchant: z.string().min(2, "Please enter the merchant or store name."),
+    .trim()
+    .min(3, "Please provide a brief description (at least 3 characters)."),
+  merchant: z
+  .string()
+  .trim()
+  .min(3, "Please enter the merchant or store name."),
   amount: z.coerce
     .number({
       required_error: "An expense amount is required.",

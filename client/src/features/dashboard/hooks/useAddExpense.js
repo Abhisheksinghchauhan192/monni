@@ -5,6 +5,8 @@ export default function useAddExpense({ onSuccess, onClose, addToast }) {
     try {
       const payload = {
         ...values,
+        description:values.description.trim(),
+        merchant:values.merchant.trim(),
         amount: Number(values.amount),
       };
 
