@@ -29,16 +29,15 @@ export async function getBreakdown(userId, from, to, by) {
 
 export async function getTrend(userId, from, to, interval) {
   const groupExpr =
-    interval === "day"
-      ? "DATE(expense_date)"
-      : "DATE_FORMAT(expense_date, '%Y-%m')";
+    interval === "day" ? "expense_date" : "DATE_FORMAT(expense_date, '%Y-%m')";
 
   const query = `
     SELECT ${groupExpr} AS period,
            SUM(amount) AS total
     FROM expenses
     WHERE user_id = ?
-      AND expense_date BETWEEN ? AND ?
+      AND expense_date >= ?
+      AND expense_date <= ?
     GROUP BY period
     ORDER BY period ASC
   `;
@@ -67,7 +66,7 @@ export async function getDashboardSummary(userId, from, to) {
     WHERE user_id = ?
       AND expense_date BETWEEN ? AND ?
     `,
-    [userId, from, to]
+    [userId, from, to],
   );
 
   // Top Category (by total spend)
@@ -81,7 +80,7 @@ export async function getDashboardSummary(userId, from, to) {
     ORDER BY SUM(amount) DESC
     LIMIT 1
     `,
-    [userId, from, to]
+    [userId, from, to],
   );
 
   const topCategory = topCategoryRow?.category || null;
@@ -90,9 +89,7 @@ export async function getDashboardSummary(userId, from, to) {
   const start = new Date(from);
   const end = new Date(to);
 
-  const diffDays = Math.ceil(
-    (end - start) / (1000 * 60 * 60 * 24)
-  );
+  const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
 
   const prevStart = new Date(start);
   prevStart.setDate(prevStart.getDate() - diffDays - 1);
@@ -107,7 +104,7 @@ export async function getDashboardSummary(userId, from, to) {
     WHERE user_id = ?
       AND expense_date BETWEEN ? AND ?
     `,
-    [userId, prevStart, prevEnd]
+    [userId, prevStart, prevEnd],
   );
 
   const prevTotal = Number(previous.total);
@@ -116,8 +113,7 @@ export async function getDashboardSummary(userId, from, to) {
   let growthPercentage = 0;
 
   if (prevTotal > 0) {
-    growthPercentage =
-      ((currentTotal - prevTotal) / prevTotal) * 100;
+    growthPercentage = ((currentTotal - prevTotal) / prevTotal) * 100;
   }
 
   return {
@@ -136,7 +132,7 @@ export async function getEarliestExpenseDate(userId) {
     FROM expenses
     WHERE user_id = ?
     `,
-    [userId]
+    [userId],
   );
 
   return row.earliest || null;
