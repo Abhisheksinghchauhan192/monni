@@ -7,13 +7,14 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-
+import { useState } from "react";
 import useTrendAnalytics from "../hooks/useTrendAnalytics";
 import CustomTooltip from "./ui/CustomTooltip";
 import MetricCard from "./ui/MetricCard"; // assuming you already created it
 
-export default function TrendCharts({ trend, loading,dateRange }) {
-  const analytics = useTrendAnalytics(trend,dateRange);
+export default function TrendCharts({ trend, loading, dateRange }) {
+  const [viewMode, setViewMode] = useState("normal");
+  const analytics = useTrendAnalytics(trend, dateRange, viewMode);
 
   return (
     <div
@@ -30,13 +31,37 @@ export default function TrendCharts({ trend, loading,dateRange }) {
       {!loading && analytics && (
         <>
           {/* Header */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Spending Trend
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {analytics.from} – {analytics.to}
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Spending Trend</h3>
+              <p className="text-xs text-gray-500">
+                {analytics.from} – {analytics.to}
+              </p>
+            </div>
+
+            <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode("normal")}
+                className={`px-3 py-1 text-xs rounded-md transition ${
+                  viewMode === "normal"
+                    ? "bg-white dark:bg-gray-700 shadow-sm"
+                    : "text-gray-500"
+                }`}
+              >
+                Normal
+              </button>
+
+              <button
+                onClick={() => setViewMode("cumulative")}
+                className={`px-3 py-1 text-xs rounded-md transition ${
+                  viewMode === "cumulative"
+                    ? "bg-white dark:bg-gray-700 shadow-sm"
+                    : "text-gray-500"
+                }`}
+              >
+                Cumulative
+              </button>
+            </div>
           </div>
 
           {/* Metrics */}
@@ -70,7 +95,7 @@ export default function TrendCharts({ trend, loading,dateRange }) {
           {/* Chart */}
           <div className="h-[350px] w-full">
             <ResponsiveContainer>
-              <LineChart data={analytics.enriched}>
+              <LineChart data={analytics.data}>
                 <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
 
                 <XAxis dataKey="label" tick={{ fontSize: 12 }} />
@@ -96,8 +121,8 @@ export default function TrendCharts({ trend, loading,dateRange }) {
                           payload.isHighest
                             ? "#ef4444"
                             : payload.isLowest
-                            ? "#f59e0b"
-                            : "#10b981"
+                              ? "#f59e0b"
+                              : "#10b981"
                         }
                       />
                     );
