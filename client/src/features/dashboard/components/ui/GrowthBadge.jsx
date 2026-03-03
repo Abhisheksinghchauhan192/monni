@@ -1,3 +1,6 @@
+import { HiOutlineTrendingUp } from "react-icons/hi";
+import { HiTrendingDown } from "react-icons/hi";
+
 export const GrowthBadge = ({growth}) => {
   const isPositive = growth >= 0;
 
@@ -10,7 +13,7 @@ export const GrowthBadge = ({growth}) => {
           : "bg-red-100 text-red-600 dark:bg-red-900/30"
       }`}
     >
-      <span>{isPositive ? "▲" : "▼"}</span>
+      <span>{isPositive ? <HiOutlineTrendingUp size={20}/> :<HiTrendingDown size={20}/> }</span>
       <span>{Math.abs(growth)}%</span>
       <span className="hidden sm:inline text-gray-400">
         vs prev

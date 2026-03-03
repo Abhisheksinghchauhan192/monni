@@ -74,14 +74,11 @@ export default function FilterBar({ filter, updateMode, updateField }) {
         filter.mode === "custom") && (
         <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-4">
-
             {filter.mode === "monthly" && (
               <>
                 <select
                   value={filter.month}
-                  onChange={(e) =>
-                    updateField("month", Number(e.target.value))
-                  }
+                  onChange={(e) => updateField("month", Number(e.target.value))}
                   className="w-full sm:w-auto
                              px-4 py-2.5 rounded-xl
                              border border-gray-200 dark:border-gray-700
@@ -99,9 +96,7 @@ export default function FilterBar({ filter, updateMode, updateField }) {
 
                 <select
                   value={filter.year}
-                  onChange={(e) =>
-                    updateField("year", Number(e.target.value))
-                  }
+                  onChange={(e) => updateField("year", Number(e.target.value))}
                   className="w-full sm:w-auto
                              px-4 py-2.5 rounded-xl
                              border border-gray-200 dark:border-gray-700
@@ -118,9 +113,7 @@ export default function FilterBar({ filter, updateMode, updateField }) {
             {filter.mode === "yearly" && (
               <select
                 value={filter.year}
-                onChange={(e) =>
-                  updateField("year", Number(e.target.value))
-                }
+                onChange={(e) => updateField("year", Number(e.target.value))}
                 className="w-full sm:w-auto
                            px-4 py-2.5 rounded-xl
                            border border-gray-200 dark:border-gray-700
@@ -133,34 +126,43 @@ export default function FilterBar({ filter, updateMode, updateField }) {
               </select>
             )}
 
-            {filter.mode === "custom" && (
-              <>
-                <input
-                  type="date"
-                  value={filter.fromDate || ""}
-                  onChange={(e) =>
-                    updateField("fromDate", e.target.value)
-                  }
-                  className="w-full sm:w-auto
-                             px-4 py-2.5 rounded-xl
-                             border border-gray-200 dark:border-gray-700
-                             bg-gray-50 dark:bg-gray-800
-                             text-sm shadow-sm"
-                />
-                <input
-                  type="date"
-                  value={filter.toDate || ""}
-                  onChange={(e) =>
-                    updateField("toDate", e.target.value)
-                  }
-                  className="w-full sm:w-auto
-                             px-4 py-2.5 rounded-xl
-                             border border-gray-200 dark:border-gray-700
-                             bg-gray-50 dark:bg-gray-800
-                             text-sm shadow-sm"
-                />
-              </>
-            )}
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+              {filter.mode === "custom" && (
+                <>
+                  {/* From Date Group */}
+                  <div className="flex flex-col flex-1 gap-1.5">
+                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">
+                      From
+                    </label>
+                    <input
+                      type="date"
+                      value={filter.fromDate || ""}
+                      onChange={(e) => updateField("fromDate", e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl
+                   border border-gray-200 dark:border-gray-700
+                   bg-gray-50 dark:bg-gray-800
+                   text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                  </div>
+
+                  {/* To Date Group */}
+                  <div className="flex flex-col flex-1 gap-1.5">
+                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">
+                      To
+                    </label>
+                    <input
+                      type="date"
+                      value={filter.toDate || ""}
+                      onChange={(e) => updateField("toDate", e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl
+                   border border-gray-200 dark:border-gray-700
+                   bg-gray-50 dark:bg-gray-800
+                   text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
