@@ -38,6 +38,7 @@ export default function AnalyticsSection() {
           <TrendCharts
             trend={data.trend}
             loading={loading}
+            dateRange={data.dateRange}
           />
         </>
       )}

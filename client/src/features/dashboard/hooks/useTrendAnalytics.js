@@ -1,19 +1,11 @@
 import { useMemo } from "react";
 
-/**
- * Detect whether backend returned:
- * YYYY-MM  -> month granularity
- * YYYY-MM-DD -> day granularity
- */
 function detectGranularity(period) {
   if (!period) return "month";
   if (period.length === 10) return "day";
   return "month";
 }
 
-/**
- * Format period for display
- */
 function formatPeriod(period, granularity) {
   if (granularity === "month") {
     const [year, month] = period.split("-");
@@ -35,53 +27,91 @@ function formatPeriod(period, granularity) {
   return period;
 }
 
-export default function useTrendAnalytics(trend = []) {
+function generateFullRange(from, to, granularity) {
+  const result = [];
+  let current = new Date(from);
+  const end = new Date(to);
+
+  while (current <= end) {
+    if (granularity === "day") {
+      result.push(current.toISOString().split("T")[0]);
+      current.setDate(current.getDate() + 1);
+    } else {
+      const year = current.getFullYear();
+      const month = current.getMonth() + 1;
+
+      result.push(
+        `${year}-${String(month).padStart(2, "0")}`
+      );
+
+      current.setMonth(current.getMonth() + 1);
+    }
+  }
+
+  return result;
+}
+
+export default function useTrendAnalytics(trend = [], dateRange) {
   return useMemo(() => {
-    if (!trend || trend.length === 0) return null;
+    if (!trend || trend.length === 0 || !dateRange)
+      return null;
 
     const granularity = detectGranularity(trend[0].period);
 
-    const sorted = [...trend].sort(
-      (a, b) => new Date(a.period) - new Date(b.period)
+    const fullRange = generateFullRange(
+      dateRange.from,
+      dateRange.to,
+      granularity
     );
 
-    const total = sorted.reduce((sum, item) => sum + item.total, 0);
+    const trendMap = new Map(
+      trend.map((item) => [
+        granularity === "day"
+          ? item.period
+          : item.period.slice(0, 7),
+        item.total,
+      ])
+    );
 
-    const highest = sorted.reduce((max, item) =>
+    const filled = fullRange.map((period) => ({
+      period,
+      total: trendMap.get(period) || 0,
+    }));
+
+    const total = filled.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
+
+    const highest = filled.reduce((max, item) =>
       item.total > max.total ? item : max
     );
 
-    const lowest = sorted.reduce((min, item) =>
+    const lowest = filled.reduce((min, item) =>
       item.total < min.total ? item : min
     );
 
-    const enriched = sorted.map((item) => {
-      const share = total > 0 ? (item.total / total) * 100 : 0;
-
-      return {
-        ...item,
-        label: formatPeriod(item.period, granularity),
-        share,
-        isHighest: item.total === highest.total,
-        isLowest: item.total === lowest.total,
-      };
-    });
-
-    const averageLabel =
-      granularity === "day"
-        ? "Average per day"
-        : "Average per month";
+    const enriched = filled.map((item) => ({
+      ...item,
+      label: formatPeriod(item.period, granularity),
+      share: total > 0 ? (item.total / total) * 100 : 0,
+      isHighest: item.total === highest.total,
+      isLowest: item.total === lowest.total,
+    }));
 
     return {
       granularity,
       enriched,
       total,
-      average: total / sorted.length,
+      average: total / filled.length,
       highest,
       lowest,
-      averageLabel,
       from: enriched[0].label,
       to: enriched[enriched.length - 1].label,
+      averageLabel:
+        granularity === "day"
+          ? "Average per day"
+          : "Average per month",
     };
-  }, [trend]);
+  }, [trend, dateRange]);
 }

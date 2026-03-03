@@ -12,15 +12,15 @@ import useTrendAnalytics from "../hooks/useTrendAnalytics";
 import CustomTooltip from "./ui/CustomTooltip";
 import MetricCard from "./ui/MetricCard"; // assuming you already created it
 
-export default function TrendCharts({ trend, loading }) {
-  const analytics = useTrendAnalytics(trend);
+export default function TrendCharts({ trend, loading,dateRange }) {
+  const analytics = useTrendAnalytics(trend,dateRange);
 
   return (
     <div
       className="bg-white dark:bg-gray-900
                  border border-gray-200 dark:border-gray-800
                  rounded-2xl shadow-sm
-                 p-6 space-y-6"
+                 p-6 space-y-6 z-1000"
     >
       {/* Loading */}
       {loading && (
