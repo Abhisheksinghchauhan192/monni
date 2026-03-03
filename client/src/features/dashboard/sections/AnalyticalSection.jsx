@@ -24,7 +24,6 @@ export default function AnalyticsSection() {
       {!loading && data && (
         <>
           <div className="grid grid-cols-1 xl:grid-cols-5 gap-8 items-stretch">
-
             {/* Donut */}
             <div className="xl:col-span-3 h-full">
               <DonutChartSection breakdown={data.breakdown} />
@@ -34,10 +33,12 @@ export default function AnalyticsSection() {
             <div className="xl:col-span-2 h-full flex">
               <SummaryGrid summary={data.summary} />
             </div>
-
           </div>
 
-          <TrendCharts trend={data.trend} />
+          <TrendCharts
+            trend={data.trend}
+            loading={loading}
+          />
         </>
       )}
     </div>
