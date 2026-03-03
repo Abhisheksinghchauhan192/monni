@@ -13,8 +13,7 @@ function determineInterval(from, to) {
   const fromDate = new Date(from);
   const toDate = new Date(to);
 
-  const diffInDays =
-    (toDate - fromDate) / (1000 * 60 * 60 * 24);
+  const diffInDays = (toDate - fromDate) / (1000 * 60 * 60 * 24);
 
   return diffInDays <= 31 ? "day" : "month";
 }
@@ -24,32 +23,35 @@ function determineInterval(from, to) {
 /* ============================= */
 
 async function resolveDateRange(userId, query) {
-  const now = new Date();
-  const today = now.toISOString().split("T")[0];
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
 
   switch (query.mode) {
     case "overall": {
       const earliest = await getEarliestExpenseDate(userId);
 
       if (!earliest) {
-        return { from: today, to: today };
+        return { from: todayStr, to: todayStr };
       }
 
       return {
-        from: earliest.toISOString().split("T")[0],
-        to: today,
+        from: earliest,
+        to: todayStr,
       };
     }
 
-    case "monthly":
-      return {
-        from: new Date(query.year, query.month - 1, 1)
-          .toISOString()
-          .split("T")[0],
-        to: new Date(query.year, query.month, 0)
-          .toISOString()
-          .split("T")[0],
-      };
+    case "monthly": {
+      const year = Number(query.year);
+      const month = Number(query.month);
+
+      const from = `${year}-${String(month).padStart(2, "0")}-01`;
+
+      const lastDay = new Date(year, month, 0).getDate();
+
+      const to = `${year}-${String(month).padStart(2, "0")}-${lastDay}`;
+
+      return { from, to };
+    }
 
     case "yearly":
       return {
@@ -67,7 +69,6 @@ async function resolveDateRange(userId, query) {
       throw new Error("Invalid mode");
   }
 }
-
 /* ============================= */
 /* Full Dashboard Service */
 /* ============================= */
