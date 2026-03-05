@@ -1,4 +1,4 @@
-import AIInsights from "../components/AIInsights";
+import AIInsights from "../components/AIInsights/AIInsights";
 import ExpenseSection from "./ExpenseSection";
 export default function TopSection() {
   return (
@@ -8,7 +8,7 @@ export default function TopSection() {
       </div>
 
       <div>
-        <AIInsights />
+        <AIInsights  />
       </div>
     </div>
   );
