@@ -5,9 +5,7 @@ import {
   getEarliestExpenseDate,
 } from "./analytics.model.js";
 
-/* ============================= */
 /* Determine Trend Interval */
-/* ============================= */
 
 function determineInterval(from, to) {
   const fromDate = new Date(from);
@@ -18,9 +16,7 @@ function determineInterval(from, to) {
   return diffInDays <= 31 ? "day" : "month";
 }
 
-/* ============================= */
 /* Resolve Date Range */
-/* ============================= */
 
 async function resolveDateRange(userId, query) {
   const today = new Date();
@@ -69,9 +65,7 @@ async function resolveDateRange(userId, query) {
       throw new Error("Invalid mode");
   }
 }
-/* ============================= */
 /* Full Dashboard Service */
-/* ============================= */
 
 export async function getFullDashboardService(userId, query) {
   const allowedFields = ["category", "payment_method"];
