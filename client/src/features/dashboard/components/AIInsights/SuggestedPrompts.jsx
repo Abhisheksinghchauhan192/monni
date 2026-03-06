@@ -6,7 +6,7 @@ export default function SuggestedPrompts({
   if (!suggestions || suggestions.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-3">
+    <div className="flex flex-wrap gap-2 mb-2">
       {suggestions.map((prompt, index) => (
         <button
           key={index}

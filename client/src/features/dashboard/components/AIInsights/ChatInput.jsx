@@ -49,14 +49,10 @@ export default function ChatInput({ onSend, disabled }) {
         onClick={handleSend}
         disabled={disabled}
         className="
-          p-2
-          rounded-lg
-          bg-emerald-500
-          text-white
-          hover:bg-emerald-600
-          disabled:opacity-50
-          disabled:cursor-not-allowed
-        "
+    p-2 rounded-lg bg-emerald-500 text-white
+    hover:bg-emerald-600 transition-colors
+    disabled:opacity-50 disabled:cursor-not-allowed
+  "
       >
         <Send className="w-4 h-4" />
       </button>

@@ -18,7 +18,8 @@ export default function AIInsights() {
       content: "Hi! Ask me anything about your spending.",
     },
   ]);
-
+  const [mode, setMode] = useState("insights");
+  // "insights" | "chat"
   const [suggestions, setSuggestions] = useState([
     "Which category costs the most?",
     "When did I spend the most?",
@@ -26,7 +27,6 @@ export default function AIInsights() {
   ]);
 
   const [thinking, setThinking] = useState(false);
-
   const [chatStarted, setChatStarted] = useState(false);
 
   async function sendMessage(text) {
@@ -82,20 +82,9 @@ export default function AIInsights() {
   }
 
   return (
-    <div
-      className="relative 
-                 bg-white dark:bg-gray-900 
-                 border border-emerald-200/50 dark:border-emerald-500/20
-                 rounded-2xl shadow-sm 
-                 p-5 
-                 h-105 
-                 flex flex-col"
-    >
-      {/* Glow */}
-      <div className="absolute inset-0 rounded-2xl bg-emerald-500/5 pointer-events-none"></div>
-
+    <div className="bg-white dark:bg-gray-900 border border-emerald-200/50 dark:border-emerald-500/20 rounded-2xl shadow-sm p-5 h-[420px] flex flex-col ">
       {/* Header */}
-      <div className="relative flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-3">
         <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-500/20">
           <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
         </div>
@@ -109,31 +98,61 @@ export default function AIInsights() {
           </p>
         </div>
       </div>
+      <div className="flex gap-2 mb-3">
+        <button
+          onClick={() => setMode("insights")}
+          className={`px-3 py-1 text-xs rounded-full border
+      ${
+        mode === "insights"
+          ? "bg-emerald-500 text-white border-emerald-500"
+          : "border-gray-300 dark:border-gray-700"
+      }
+    `}
+        >
+          Insights
+        </button>
 
-      {/* Scrollable Area */}
-      <div
-        className="relative flex-1 overflow-y-auto pr-2 space-y-4 
-                   text-sm text-gray-700 dark:text-gray-300
-                   scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700"
-      >
-        {/* Auto Insights */}
-        {!chatStarted && (
+        <button
+          onClick={() => setMode("chat")}
+          className={`px-3 py-1 text-xs rounded-full border
+      ${
+        mode === "chat"
+          ? "bg-emerald-500 text-white border-emerald-500"
+          : "border-gray-300 dark:border-gray-700"
+      }
+    `}
+        >
+          Chat
+        </button>
+      </div>
+      {/* Warning */}
+      {mode === "chat" && (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs p-2 rounded-md mb-2">
+          ⚠️ AI Assistant is experimental. Responses may occasionally be
+          inaccurate.
+        </div>
+      )}
+
+      <div className="flex-1 overflow-y-auto pr-2">
+        {mode === "insights" && (
           <InsightCards insights={insights} loading={loading} />
         )}
 
-        {/* Chat */}
-        <ChatWindow messages={messages} />
+        {mode === "chat" && <ChatWindow messages={messages} />}
+      </div>
 
-        {/* Suggested Questions */}
+      {/* Suggested prompts */}
+      {mode === "chat" && (
         <SuggestedPrompts
           suggestions={suggestions}
           onSelect={sendMessage}
           disabled={thinking}
         />
-      </div>
-
-      {/* Chat Input */}
-      <ChatInput onSend={sendMessage} disabled={thinking} />
+      )}
+      {/* Input */}
+      {mode === "chat" && (
+        <ChatInput onSend={sendMessage} disabled={thinking} />
+      )}
     </div>
   );
 }
