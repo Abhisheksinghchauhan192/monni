@@ -6,7 +6,7 @@ dotenv.config();
 const sharedEnv = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
 
 /* ===== Server-only ===== */
-const serverEnv = ["PORT"];
+const serverEnv = [];
 
 function validate(keys) {
   keys.forEach((key) => {
@@ -29,6 +29,6 @@ export const DB_NAME = process.env.DB_NAME;
 export function validateServerEnv() {
   validate(serverEnv);
   return {
-    PORT: process.env.PORT,
+    PORT: process.env.PORT || 3000,
   };
 }
