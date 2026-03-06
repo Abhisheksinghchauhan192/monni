@@ -1,10 +1,14 @@
 import pool from "../../config/database.js";
 
-/* ============================= */
 /* Breakdown */
-/* ============================= */
 
 export async function getBreakdown(userId, from, to, by) {
+  const allowedFields = ["category", "payment_method"];
+
+  if (!allowedFields.includes(by)) {
+    throw new Error("Invalid breakdown field");
+  }
+
   const query = `
     SELECT ${by} AS label,
            SUM(amount) AS total
@@ -23,9 +27,7 @@ export async function getBreakdown(userId, from, to, by) {
   }));
 }
 
-/* ============================= */
 /* Trend */
-/* ============================= */
 
 export async function getTrend(userId, from, to, interval) {
   const groupExpr =
@@ -50,9 +52,7 @@ export async function getTrend(userId, from, to, interval) {
   }));
 }
 
-/* ============================= */
 /* Dashboard Summary */
-/* ============================= */
 
 export async function getDashboardSummary(userId, from, to) {
   // Current period

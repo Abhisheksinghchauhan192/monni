@@ -1,20 +1,37 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import { processAIChat } from "./ai.service.js";
+import { runAgent } from "./agent/agent.service.js";
 
-export const chatWithAI = asyncHandler(async (req, res) => {
-  const { message, history } = req.body;
+import { createAIResponse } from "./utils/aiResponse.js";
 
-  const userId = req.user.id;
+export async function chat(req, res, next) {
+  try {
 
-  const result = await processAIChat({
-    userId,
-    message,
-    history,
-  });
+    const { message, history } = req.body;
+    const userId = req.user.id;
 
-  res.json({
-    success: true,
-    reply: result.reply,
-    suggestions: result.suggestions,
-  });
-});
+    const aiResult = await runAgent({
+      message,
+      history,
+      userId
+    });
+
+    const response = createAIResponse({
+      reply: aiResult.reply || "I'm not sure how to answer that yet.",
+      data: aiResult.data || null,
+      suggestions: aiResult.suggestions || [],
+      warning: "AI responses may occasionally be inaccurate."
+    });
+
+    res.json(response);
+
+  } catch (error) {
+
+    res.json(
+      createAIResponse({
+        reply:
+          "Something went wrong while processing your request.",
+        warning: "AI assistant is currently experimental."
+      })
+    );
+
+  }
+}
