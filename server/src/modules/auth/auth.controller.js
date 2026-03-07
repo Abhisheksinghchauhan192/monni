@@ -26,8 +26,9 @@ export const login = asyncHandler(async (req, res) => {
 
   res.cookie("monni_token", token, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -51,8 +52,9 @@ export const me = asyncHandler(async (req, res) => {
 export const logout = asyncHandler(async (req, res) => {
   res.clearCookie("monni_token", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false,
+    secure: true,
+    sameSite: "none",
+    path:"/"
   });
 
   res.status(200).json({
