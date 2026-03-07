@@ -11,7 +11,7 @@ import { hashPassword, comparePassword } from "../../utils/password.js";
 import { generateToken } from "../../utils/jwt.js";
 import crypto from "crypto";
 import { generateResetToken } from "../../utils/resetToken.js";
-import { sendResetEmail } from "../../utils/email.js";
+import { sendResetEmail } from "../../services/email.service.js";
 
 // Registration of User Business Logic
 export async function registerUser({ name, email, password }) {
