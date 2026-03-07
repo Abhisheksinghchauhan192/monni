@@ -26,7 +26,7 @@ export default defineConfig({
       useCredentials:true,
       registerType: 'autoUpdate',
       devOptions: {
-        enabled: false ,
+        enabled: true ,
         type:'module',
         navigateFallback:'index.html',
       },

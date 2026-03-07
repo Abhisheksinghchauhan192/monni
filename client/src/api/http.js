@@ -1,30 +1,37 @@
 import axios from "axios";
 
-
-// below code for laptop and mobile testing temporarily.
+const API_BASE =
+  import.meta.env.DEV ? "/api" : import.meta.env.VITE_API_BASE_URL;
 
 const http = axios.create({
-  // baseURL: import.meta.env.VITE_API_BASE_URL,
-  // For the reverse Proxy Service now we can do only like 
-  baseURL:"/api",
-  withCredentials: true, // for cookies
+  baseURL: API_BASE,
+  withCredentials: true,
 });
-
 
 http.interceptors.response.use(
   (response) => response,
+
   (error) => {
+    const status = error.response?.status;
+
     const backendMessage = error.response?.data?.message;
-    const netWorkMessage =
+
+    const networkMessage =
       error.request && !error.response
-        ? "Sever Not Responding .Please try again ."
+        ? "Server not responding. Please try again."
         : null;
+
+    /* Handle expired session */
+    if (status === 401) {
+      window.location.href = "/login";
+    }
 
     return Promise.reject(
       backendMessage ||
-        netWorkMessage ||
-        "Something Went Wrong .Plase try again .",
+        networkMessage ||
+        "Something went wrong. Please try again."
     );
-  },
+  }
 );
+
 export default http;
