@@ -16,20 +16,20 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
 } from "../../validators/auth/reset.schema.js";
-import { authRateLimiter } from "../../middlewares/rateLimit.middleware.js";
+import { loginRateLimiter, passwordResetLimiter, registerRateLimiter } from "../../middlewares/rateLimit.middleware.js";
 import authMiddleWare from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.post(
   "/register",
-  authRateLimiter(3),
+  registerRateLimiter,
   validateBody(registerSchema),
   register,
 );
 
 router.post("/login",
-  authRateLimiter(5),
+  loginRateLimiter,
   validateBody(loginSchema),
   login,
 );
@@ -46,7 +46,7 @@ router.post("/logout",
 
 router.post(
   "/forgot-password",
-  authRateLimiter(3),
+  passwordResetLimiter,
   validateBody(forgotPasswordSchema),
   forgotPasswordController,
 );
