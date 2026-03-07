@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const API_BASE =
-  import.meta.env.DEV ? "/api" : import.meta.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.DEV
+  ? "/api"
+  : import.meta.env.VITE_API_BASE_URL;
 
 const http = axios.create({
   baseURL: API_BASE,
@@ -10,21 +11,13 @@ const http = axios.create({
 
 http.interceptors.response.use(
   (response) => response,
-
   (error) => {
-    const status = error.response?.status;
-
     const backendMessage = error.response?.data?.message;
 
     const networkMessage =
       error.request && !error.response
         ? "Server not responding. Please try again."
         : null;
-
-    /* Handle expired session */
-    if (status === 401) {
-      window.location.href = "/login";
-    }
 
     return Promise.reject(
       backendMessage ||

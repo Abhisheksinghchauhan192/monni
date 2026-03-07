@@ -12,18 +12,32 @@ export default function Home() {
   const location = useLocation();
   useEffect(() => {
     if (location.hash) {
-      const element = document.getElementById(location.hash.replace("#", ""));
+      const id = location.hash.replace("#", "");
+      const element = document.getElementById(id);
 
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+        const yOffset = -80; // offset for fixed navbar
+        const y =
+          element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+          top: y,
+          behavior: "smooth",
+        });
       }
+    } else {
+      // if navigating to "/" without hash
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   }, [location]);
 
   return (
     <div className="space-y-28">
       {/* ================= HERO SECTION ================= */}
-      <section className="min-h-[80vh] flex flex-col justify-center items-center text-center px-4">
+      <section id="home" className="min-h-[80vh] flex flex-col justify-center items-center text-center px-4">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-gray-100 leading-tight">
           Take Control of Your
           <span className="text-emerald-500"> Finances </span>
