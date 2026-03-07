@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { HiMenu, HiX } from "react-icons/hi";
 import { FaMoon } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
@@ -10,9 +10,10 @@ export default function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const navLinkClass = ({ isActive }) =>
+  const location = useLocation();
+  const navLinkClass = (hash) =>
     `font-medium transition duration-200 cursor-pointer ${
-      isActive
+      location.hash === hash || (hash === "" && location.pathname === "/")
         ? "text-emerald-500"
         : "text-gray-700 dark:text-gray-300 hover:text-emerald-500"
     }`;
@@ -54,15 +55,15 @@ export default function PublicNavbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          <NavLink to="/" end className={navLinkClass}>
+          <NavLink to="/" end className={navLinkClass("")}>
             Home
           </NavLink>
 
           <NavLink
-            to="/#feature"
+            to="/#features"
             end
             onClick={() => setIsOpen(false)}
-            className={navLinkClass}
+            className={navLinkClass("#features")}
           >
             Features
           </NavLink>
@@ -71,12 +72,12 @@ export default function PublicNavbar() {
             to="/#contact"
             end
             onClick={() => setIsOpen(false)}
-            className={navLinkClass}
+            className={navLinkClass("#contact")}
           >
             Contact
           </NavLink>
 
-          <NavLink to="/login" className={navLinkClass}>
+          <NavLink to="/login">
             Login
           </NavLink>
 
@@ -129,7 +130,7 @@ export default function PublicNavbar() {
               to="/"
               end
               onClick={() => setIsOpen(false)}
-              className={navLinkClass}
+              className={navLinkClass("")}
             >
               Home
             </NavLink>
@@ -137,10 +138,10 @@ export default function PublicNavbar() {
 
           <div>
             <NavLink
-              to="/#feature"
+              to="/#features"
               end
               onClick={() => setIsOpen(false)}
-              className={navLinkClass}
+              className={navLinkClass("#features")}
             >
               Features
             </NavLink>
@@ -150,7 +151,7 @@ export default function PublicNavbar() {
               to="/#contact"
               end
               onClick={() => setIsOpen(false)}
-              className={navLinkClass}
+              className={navLinkClass("#contact")}
             >
               Contact
             </NavLink>
@@ -159,7 +160,7 @@ export default function PublicNavbar() {
             <NavLink
               to="/login"
               onClick={() => setIsOpen(false)}
-              className={navLinkClass}
+              className={navLinkClass("login")}
             >
               Login
             </NavLink>
