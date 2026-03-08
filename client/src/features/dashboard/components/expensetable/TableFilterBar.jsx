@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, X } from "lucide-react";
-import {PAYMENT_METHODS} from "../../../../constants/paymentMethods";
+import { PAYMENT_METHODS } from "../../../../constants/paymentMethods";
 
-export default function TableFilterBar({ filters, setFilters,categories}) {
+export default function TableFilterBar({
+  filters,
+  setFilters,
+  categories,
+  clearFilters,
+}) {
   const [localSearch, setLocalSearch] = useState(filters.search);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -12,22 +17,14 @@ export default function TableFilterBar({ filters, setFilters,categories}) {
         ...prev,
         search: localSearch,
       }));
-    }, 600);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [localSearch]);
 
-  const clearFilters = () => {
-    setLocalSearch("");
-    setFilters({
-      search: "",
-      category: "",
-      payment_method: "",
-      fromDate: "",
-      toDate: "",
-    });
-  };
-
+  useEffect(() => {
+    setLocalSearch(filters.search);
+  }, [filters.search]);
   return (
     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 space-y-3">
       {/* Top Row */}
@@ -59,7 +56,11 @@ export default function TableFilterBar({ filters, setFilters,categories}) {
                        border border-gray-200 dark:border-gray-700"
           >
             <option value="">Category</option>
-            {categories.map(c=><option value={c} key={c}>{c}</option>)}
+            {categories.map((c) => (
+              <option value={c} key={c}>
+                {c}
+              </option>
+            ))}
           </select>
 
           <select
@@ -75,11 +76,11 @@ export default function TableFilterBar({ filters, setFilters,categories}) {
                        border border-gray-200 dark:border-gray-700"
           >
             <option value="">Payment</option>
-            {
-                PAYMENT_METHODS.map(m=><option value={m} key={m}>
-                  {m}
-                </option>)
-            }
+            {PAYMENT_METHODS.map((m) => (
+              <option value={m} key={m}>
+                {m}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -140,7 +141,11 @@ export default function TableFilterBar({ filters, setFilters,categories}) {
             </div>
 
             <button
-              onClick={clearFilters}
+              onClick={() => {
+                clearFilters();
+                setLocalSearch("");
+                setShowAdvanced(false);
+              }}
               className="col-span-2 py-2 rounded-xl text-sm
                          bg-red-50 text-red-600
                          dark:bg-red-900/30 dark:text-red-400"

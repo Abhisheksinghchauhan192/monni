@@ -5,7 +5,7 @@ export default function useExpenses(filters = {}) {
   const [expenses, setExpenses] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const [error,setError] = useState("");
   const cursorRef = useRef(null);
 
   const fetchExpenses = async (reset = false) => {
@@ -43,6 +43,7 @@ export default function useExpenses(filters = {}) {
       cursorRef.current = nextCursor;
       setHasMore(more);
     } catch (err) {
+      setError(err)
       console.error("Fetch failed:", err);
     } finally {
       setLoading(false);
@@ -64,6 +65,8 @@ export default function useExpenses(filters = {}) {
     fetchExpenses,
     hasMore,
     loading,
+    error,
+    setError,
     setExpenses,
   };
 }

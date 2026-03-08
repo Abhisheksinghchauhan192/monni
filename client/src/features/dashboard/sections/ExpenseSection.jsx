@@ -27,11 +27,24 @@ export default function ExpenseSection() {
     ],
   );
 
+  // Function to Clear Filters 
+  const clearFilters = () => {
+    setFilters({
+      search: "",
+      category: "",
+      payment_method: "",
+      fromDate: "",
+      toDate: "",
+    });
+  };
+
+  const filtersActive =   filters.search || filters.category || filters.payment_method || filters.fromDate || filters.toDate;
+
   // 3. Categories (for filter dropdown + add form)
   const { categories } = useCategories();
 
   // 4. Expense state (single source of truth)
-  const { expenses, fetchExpenses, hasMore, loading, setExpenses } =
+  const { expenses, fetchExpenses, hasMore, loading, setExpenses,error,setError} =
     useExpense(stableFilters);
 
   // 5. Insert new expense instantly (real-time update)
@@ -60,14 +73,20 @@ export default function ExpenseSection() {
       filters={filters}
       setFilters={setFilters}
       categories={categories}
+      clearFilters={clearFilters}
       />
       <ExpenseTable
         expenses={expenses}
         fetchExpenses={fetchExpenses}
         hasMore={hasMore}
+        error={error}
+        setError={setError}
         loading={loading}
         setExpenses={setExpenses}
         categories={categories}
+        isFiltersActive ={filtersActive}
+        clearFilters={clearFilters}
+        handleExpenseAdded={handleExpenseAdded}
       />  
 
       {/* Floating Add Button */}
