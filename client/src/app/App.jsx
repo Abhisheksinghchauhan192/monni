@@ -4,8 +4,10 @@ import ThemeWrapper from "../components/ThemeWrapper";
 import { ThemeProvider } from "../context/ThemeContext";
 import { AuthProvider } from "../context/AuthContext";
 import { ToastProvider } from "../context/ToastContext";
+import { Analytics } from '@vercel/analytics/react';
 export default function App() {
   return (
+    <>
     <ThemeProvider>
       <ThemeWrapper>
         <ToastProvider>
@@ -15,5 +17,7 @@ export default function App() {
         </ToastProvider>
       </ThemeWrapper>
     </ThemeProvider>
+    <Analytics/>
+    </>
   );
 }
