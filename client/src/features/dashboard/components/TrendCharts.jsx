@@ -136,8 +136,38 @@ export default function TrendCharts({ trend, loading, dateRange }) {
       )}
 
       {!loading && !analytics && (
-        <div className="h-[350px] flex items-center justify-center text-gray-400 text-sm">
-          No trend data available for selected period.
+        <div className="flex flex-col items-center justify-center h-[350px] text-center px-6">
+          <div
+            className="
+      mb-4 flex h-14 w-14 items-center justify-center
+      rounded-xl
+      bg-gray-100 dark:bg-gray-800
+      border border-gray-200 dark:border-gray-700
+    "
+          >
+            <svg
+              className="h-6 w-6 text-gray-500 dark:text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 17l6-6 4 4 8-8"
+              />
+            </svg>
+          </div>
+
+          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            No spending trend available
+          </h4>
+
+          <p className="mt-1 max-w-sm text-xs text-gray-500 dark:text-gray-400">
+            Add more expenses or adjust the selected date range to view spending
+            trends over time.
+          </p>
         </div>
       )}
     </div>

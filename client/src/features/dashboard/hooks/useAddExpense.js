@@ -18,6 +18,7 @@ export default function useAddExpense({ onSuccess, onClose, addToast }) {
       addToast("Expense added successfully", "success");
 
     } catch (err) {
+      onClose?.();
       addToast("Failed to add expense", "error");
       throw err;
     }

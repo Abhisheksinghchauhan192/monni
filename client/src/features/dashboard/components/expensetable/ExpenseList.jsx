@@ -1,22 +1,24 @@
 import { Loader } from "lucide-react";
 import ExpenseCard from "./components/ExpenseCard";
-import ExpenseCardSkeleton from "./components/ExpenseCardSkeleton";
 import SentinelLoader from "./SentineLoader";
+import ExpenseCardSkeleton from "./components/ExpenseCardSkeleton";
 
 export default function ExpenseList({
   expenses,
-  loading,
   hasMore,
   fetchExpenses,
   onOpen,
   onEdit,
+  loading
 }) {
   return (
-    <div className="space-y-3">
+<div className="space-y-3 h-full overflow-y-auto pr-2">    
+
       {/* Skeleton on first load */}
       {loading &&
         expenses.length === 0 &&
-        [...Array(6)].map((_, i) => <ExpenseCardSkeleton key={i} />)}
+        [...Array(3)].map((_, i) => <ExpenseCardSkeleton key={i} />)}
+
 
       {/* Actual Cards */}
       {expenses.map((exp) => (
