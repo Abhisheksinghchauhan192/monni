@@ -7,8 +7,8 @@ export default function TopSection() {
         <ExpenseSection />
       </div>
 
-      <div>
-        <AIInsights  />
+      <div className="hidden sm:block">
+        <AIInsights />
       </div>
     </div>
   );
