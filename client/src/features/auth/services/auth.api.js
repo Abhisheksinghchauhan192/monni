@@ -6,12 +6,6 @@ export async function loginUser(credentials) {
   return data;
 }
 
-// register user
-export async function registerUser(payload) {
-  const { data } = await http.post("/auth/register", payload);
-  return data;
-}
-
 // forgot password api call
 export async function forgotPassword(email) {
   const { data } = await http.post("/auth/forgot-password",email);
@@ -21,5 +15,22 @@ export async function forgotPassword(email) {
 // reset password request
 export async function resetPassword(token, data) {
   const response = await http.post(`/auth/reset-password/${token}`,data);
+  return response.data;
+}
+
+// 2 Step Varification Registration Routes..
+
+export async function initiateRegister(data) {
+  const response =  await http.post("/auth/register/initiate", data);
+  return response.data;
+}
+
+export async  function verifyRegisterOtp(data) {
+  const response =  await http.post("/auth/register/verify", data);
+  return response.data;
+}
+
+export async function resendOtp(email) {
+  const response = await http.post("/auth/register/resend-otp", { email });
   return response.data;
 }

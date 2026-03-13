@@ -35,11 +35,19 @@ export const initiateRegister = asyncHandler(async (req, res) => {
 export const verifyRegisterOTP = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
 
-  const user = await verifyRegistrationOTP({ email, otp });
+  const { user, token } = await verifyRegistrationOTP({ email, otp });
+
+  res.cookie("monni_token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
 
   res.status(201).json({
     success: true,
-    message: "User registered successfully",
+    message: "Account verified successfully",
     data: user,
   });
 });

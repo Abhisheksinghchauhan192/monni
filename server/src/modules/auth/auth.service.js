@@ -11,7 +11,10 @@ import { hashPassword, comparePassword } from "../../utils/password.js";
 import { generateToken } from "../../utils/jwt.js";
 import crypto from "crypto";
 import { generateResetToken } from "../../utils/resetToken.js";
-import { sendResetEmail, sendWelcomeEmail } from "../../services/email.service.js";
+import {
+  sendResetEmail,
+  sendWelcomeEmail,
+} from "../../services/email.service.js";
 import bcrypt from "bcrypt";
 import { generateOTP } from "../../utils/otp.js";
 import { sendOTPEmail } from "../../services/email.service.js";
@@ -83,7 +86,7 @@ export async function resetPasswordService(token, newPassword) {
   const user = await findUserByResetToken(hashedToken);
 
   if (!user) {
-    throw new ApiError(401,"Invalid  Token");
+    throw new ApiError(401, "Invalid  Token");
   }
 
   const passwordHash = await hashPassword(newPassword);
@@ -92,11 +95,9 @@ export async function resetPasswordService(token, newPassword) {
   await clearResetToken(user.id);
 }
 
-
-// Services for Registration Validations 
+// Services for Registration Validations
 
 export async function initiateRegistration({ name, email, password }) {
-
   const existingUser = await findUserByEmail(email);
 
   if (existingUser) {
@@ -125,7 +126,6 @@ export async function initiateRegistration({ name, email, password }) {
 }
 
 export async function verifyRegistrationOTP({ email, otp }) {
-
   const pending = await findPendingByEmail(email);
 
   if (!pending) {
@@ -147,21 +147,33 @@ export async function verifyRegistrationOTP({ email, otp }) {
     throw new ApiError(400, "Invalid OTP");
   }
 
-  const user = await createUser({
+  await createUser({
     name: pending.name,
     email: pending.email,
     passwordHash: pending.password_hash,
   });
 
-  await sendWelcomeEmail(pending.email,pending.name);
+  await sendWelcomeEmail(pending.email, pending.name);
+  const user = await findUserByEmail(pending.email);
+  if (!user) {
+    throw new ApiError(401, "Something went wrong when loggin in.");
+  }
+
+  const token = generateToken({ id: user.id, publicId: user.public_id });
   await deletePending(email);
 
-  return user;
+  return {
+    token,
+    user: {
+      publicId: user.public_id,
+      email: user.email,
+      name: user.name,
+    },
+  };
 }
 
 // resend otp varification otp
 export async function resendRegistrationOTP(email) {
-
   const pending = await findPendingByEmail(email);
 
   if (!pending) {

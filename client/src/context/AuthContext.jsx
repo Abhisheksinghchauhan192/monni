@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
       try {
         const response = await getCurrentUser();
         setUser(response.data);
-      } catch (err) {
+      } catch  {
         setUser(null);
       } finally {
         setLoading(false);
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: user,
+        isAuthenticated: !!user,
         loading,
         setUser,
         logout,

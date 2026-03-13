@@ -10,7 +10,7 @@ export default function authMiddleWare(req, res, next) {
 
   try {
     const decoded = varifyToken(token);
-    req.user = decoded;
+    req.user = decoded.publicId;
     next();
   } catch {
     next(new ApiError(401, "Token Expired !"));
