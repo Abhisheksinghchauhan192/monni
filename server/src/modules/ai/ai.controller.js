@@ -2,7 +2,7 @@ import { runAgent } from "./agent/agent.service.js";
 
 import { createAIResponse } from "./utils/aiResponse.js";
 
-export async function chat(req, res, next) {
+export async function chat(req, res) {
   try {
 
     const { message, history } = req.body;
@@ -23,7 +23,7 @@ export async function chat(req, res, next) {
 
     res.json(response);
 
-  } catch (error) {
+  } catch {
 
     res.json(
       createAIResponse({

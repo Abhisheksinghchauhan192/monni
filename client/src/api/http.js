@@ -16,7 +16,7 @@ http.interceptors.response.use(
 
     const networkMessage =
       error.request && !error.response
-        ? "Server not responding. Please try again."
+        ? "Network error, Please check your network."
         : null;
 
     return Promise.reject(

@@ -29,7 +29,7 @@ export async function callOpenAI({
   return parseAIResponse(text);
 }
 
-function buildPrompt({ message, history, tools, toolResult }) {
+function buildPrompt({ message, tools, toolResult }) {
 
   let prompt = `
 You are an AI financial assistant for the MoNNI expense tracker.

@@ -1,5 +1,4 @@
 import pool from "../../config/database.js";
-import { exportExpenses } from "./expenses.controller.js";
 
 export async function createExpense(userId, expense) {
   const {
@@ -120,14 +119,15 @@ export async function getExpensesCursor(userId, options) {
     LIMIT ?
   `;
 
+  let newLimit = limit;
   if (limit > 100) {
-    limit = 100;
+    newLimit = 100;
   }
-  params.push(limit);
+  params.push(newLimit);
 
   const [rows] = await pool.query(query, params);
 
-  const hasMore = rows.length === limit;
+  const hasMore = rows.length === newLimit;
 
   let nextCursor = null;
 

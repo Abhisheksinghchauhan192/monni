@@ -6,6 +6,8 @@ import { CiLogout } from "react-icons/ci";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
+
 
 export default function AppNavigationBar() {
   const { toggleTheme, theme } = useTheme();
@@ -13,9 +15,11 @@ export default function AppNavigationBar() {
   const {logout} = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const{addToast} = useToast();
 
   const handleLogout = async () => {
     await logout();
+    addToast("Logged out Successfully.","success");
     navigate("/");
   };
 

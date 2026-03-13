@@ -6,43 +6,57 @@ import {
   logout,
   forgotPasswordController,
   resetPasswordController,
+  initiateRegister,
+  verifyRegisterOTP,
+  resendRegisterOTP,
 } from "./auth.controller.js";
 import { validateBody } from "../../validators/validate.js";
 import {
   registerSchema,
   loginSchema,
 } from "../../validators/auth/auth.schema.js";
+import { otpSchema,resendOtpSchema} from "../../validators/auth/otp.schema.js";
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
 } from "../../validators/auth/reset.schema.js";
-import { loginRateLimiter, passwordResetLimiter, registerRateLimiter } from "../../middlewares/rateLimit.middleware.js";
+import {
+  loginRateLimiter,
+  passwordResetLimiter,
+  rateLimiter,
+  registerRateLimiter,
+} from "../../middlewares/rateLimit.middleware.js";
 import authMiddleWare from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.post(
-  "/register",
+  "/register/initiate",
   registerRateLimiter,
   validateBody(registerSchema),
-  register,
+  initiateRegister,
 );
 
-router.post("/login",
-  loginRateLimiter,
-  validateBody(loginSchema),
-  login,
+router.post("/register/verify",
+  rateLimiter(2),
+   validateBody(otpSchema), 
+   verifyRegisterOTP);
+// resend otp route
+router.post(
+  "/register/resend-otp",
+  rateLimiter(2),
+  validateBody(resendOtpSchema),
+  resendRegisterOTP,
 );
 
-router.get("/me",
-  authMiddleWare,
-  me,
-);
+// For Admin or Internal tooling.
+router.post("/register", validateBody(registerSchema), register);
 
-router.post("/logout",
-  authMiddleWare,
-  logout,
-);
+router.post("/login", loginRateLimiter, validateBody(loginSchema), login);
+
+router.get("/me", authMiddleWare, me);
+
+router.post("/logout", authMiddleWare, logout);
 
 router.post(
   "/forgot-password",

@@ -4,6 +4,7 @@ import routes from "./routes.js";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { cleanupExpiredRegistrations } from "./services/cleanup.service.js";
 
 const app = express();
 app.use(helmet());
@@ -25,6 +26,10 @@ app.get("/health", (req, res) => {
 
 // application routes
 app.use("/api", routes);
+
+// Cleanup Task of Pending registrations.
+// Clean Every 12 Hours
+setInterval(cleanupExpiredRegistrations,12*60*60*1000)
 
 // global error handler
 app.use(errorHandler);
