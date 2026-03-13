@@ -43,7 +43,7 @@ export async function callAI({
   return parseAIResponse(text);
 }
 
-function buildPrompt({ message, history, tools, toolResult }) {
+function buildPrompt({ message, tools, toolResult }) {
   let prompt = `
 You are an AI financial assistant for the MoNNI expense tracker.
 
@@ -122,7 +122,9 @@ function parseAIResponse(text) {
 
   try {
     return JSON.parse(text);
-  } catch {}
+  } catch {
+    console.log("Error in Parsing Response");
+  }
 
   // Try detecting tool call inside text
   if (text.includes("getCategoryBreakdown")) {

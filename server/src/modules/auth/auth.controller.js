@@ -3,9 +3,11 @@ import {
   loginUser,
   forgotPasswordService,
   resetPasswordService,
+  initiateRegistration,
+  verifyRegistrationOTP,
+  resendRegistrationOTP,
 } from "./auth.service.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-
 // POST API -> /api/auth/register
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -15,6 +17,43 @@ export const register = asyncHandler(async (req, res) => {
     success: true,
     message: "User Registered Successfully.",
     data: user,
+  });
+});
+
+// POST API -> api/register/initiate
+export const initiateRegister = asyncHandler(async (req, res) => {
+  const result = await initiateRegistration(req.body);
+
+  res.status(200).json({
+    success: true,
+    message: "OTP sent to email",
+    data: result,
+  });
+});
+
+// POST API -> api/register/verify
+export const verifyRegisterOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+
+  const user = await verifyRegistrationOTP({ email, otp });
+
+  res.status(201).json({
+    success: true,
+    message: "User registered successfully",
+    data: user,
+  });
+});
+
+// POST API -> api/register/resend-otp
+export const resendRegisterOTP = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const result = await resendRegistrationOTP(email);
+
+  res.status(200).json({
+    success: true,
+    message: "OTP resent successfully",
+    data: result,
   });
 });
 
@@ -54,7 +93,7 @@ export const logout = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    path:"/"
+    path: "/",
   });
 
   res.status(200).json({
