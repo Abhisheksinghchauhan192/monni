@@ -11,7 +11,7 @@ import { hashPassword, comparePassword } from "../../utils/password.js";
 import { generateToken } from "../../utils/jwt.js";
 import crypto from "crypto";
 import { generateResetToken } from "../../utils/resetToken.js";
-import { sendResetEmail } from "../../services/email.service.js";
+import { sendResetEmail, sendWelcomeEmail } from "../../services/email.service.js";
 import bcrypt from "bcrypt";
 import { generateOTP } from "../../utils/otp.js";
 import { sendOTPEmail } from "../../services/email.service.js";
@@ -153,6 +153,7 @@ export async function verifyRegistrationOTP({ email, otp }) {
     passwordHash: pending.password_hash,
   });
 
+  await sendWelcomeEmail(pending.email,pending.name);
   await deletePending(email);
 
   return user;

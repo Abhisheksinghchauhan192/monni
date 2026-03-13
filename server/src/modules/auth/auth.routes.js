@@ -37,7 +37,10 @@ router.post(
   initiateRegister,
 );
 
-router.post("/register/verify", validateBody(otpSchema), verifyRegisterOTP);
+router.post("/register/verify",
+  rateLimiter(2),
+   validateBody(otpSchema), 
+   verifyRegisterOTP);
 // resend otp route
 router.post(
   "/register/resend-otp",

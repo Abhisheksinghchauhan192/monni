@@ -1,6 +1,6 @@
 import logger from "../utils/logger.js";
 
-export default (err, req, res) => {
+export default (err, req, res,next) => {
   const statusCode = err.statusCode || 500;
 
   logger.error(err);
