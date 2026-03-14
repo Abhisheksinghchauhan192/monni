@@ -35,6 +35,4 @@ export async function runAgent({ message, history, userId }) {
         "I'm not sure how to process that financial query yet. Try asking about spending, categories, or trends.",
     };
   }
-
-  return decision;
 }

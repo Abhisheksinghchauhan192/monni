@@ -11,3 +11,9 @@ export async function logoutUser() {
   const { data } = await http.post("/auth/logout");
   return data;
 }
+
+// update user profile
+export async function updateProfile(profileData) {
+  const { data } = await http.put("/auth/profile", profileData);
+  return data;
+}

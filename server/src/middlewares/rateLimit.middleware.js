@@ -1,14 +1,19 @@
 import rateLimit,{ipKeyGenerator} from "express-rate-limit";
 
 export const rateLimiter = (maxRequests)=> rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 20 * 60 * 1000,
   max: maxRequests,
-  message: {
-    success: false,
-    message: "Too many attempts . Please try again later",
-  },
   standardHeaders: true,
   legacyHeaders: false,
+
+  keyGenerator: (req) => {
+   return ipKeyGenerator(req.ip);
+  },
+
+  message: {
+    success:false,
+    message: "Too many attempts . Try again later.",
+  },
 });
 
 
@@ -44,7 +49,7 @@ export const registerRateLimiter = rateLimit({
 
 export const passwordResetLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 3,
+  max: 2,
   standardHeaders: true,
   legacyHeaders: false,
 

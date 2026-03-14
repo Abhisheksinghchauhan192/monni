@@ -7,11 +7,12 @@ import useForm from "../../../hooks/useForm";
 import useAddExpense from "../hooks/useAddExpense";
 import { useToast } from "../../../context/ToastContext";
 
+const ADD_CATEGORY_OPTION = "➕ Add New Category";
+
 export default function AddExpenseForm({ onSuccess, onClose }) {
   const { addToast } = useToast();
   const { categories, addCustomCategory } = useCategories();
 
-  const [showCustomInput, setShowCustomInput] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [categoryError, setCategoryError] = useState("");
 
@@ -22,6 +23,7 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
   });
 
   const today = new Date().toLocaleDateString("en-CA");
+
   const form = useForm({
     initialValues: {
       description: "",
@@ -32,23 +34,36 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
       merchant: "",
     },
     schema: addExpenseSchema,
-    onSubmit: submitExpense,
+    onSubmit: (values) => {
+      if (values.category === ADD_CATEGORY_OPTION) {
+        setCategoryError("Please add a custom category first.");
+        return;
+      }
+
+      submitExpense(values);
+    },
   });
 
   const handleAddCategory = () => {
-    const result = addCustomCategory(newCategory);
+    const trimmed = newCategory.trim();
 
-    if (result.error) {
+    if (!trimmed) {
+      setCategoryError("Category name cannot be empty.");
+      return;
+    }
+
+    const result = addCustomCategory(trimmed);
+
+    if (result?.error) {
       setCategoryError(result.error);
       return;
     }
 
     form.handleChange({
-      target: { name: "category", value: newCategory },
+      target: { name: "category", value: trimmed },
     });
 
     setNewCategory("");
-    setShowCustomInput(false);
     setCategoryError("");
   };
 
@@ -64,16 +79,16 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
         <InputField label="Date" name="expense_date" type="date" form={form} />
       </div>
 
-      {/* Category Select */}
+      {/* Category */}
       <div className="space-y-2">
         <SelectField
           label="Category"
           name="category"
-          options={[...categories, "➕ Add New Category"]}
+          options={[...categories, ADD_CATEGORY_OPTION]}
           form={form}
         />
 
-        {form.values.category === "➕ Add New Category" && (
+        {form.values.category === ADD_CATEGORY_OPTION && (
           <div className="space-y-2 animate-fadeIn">
             <div className="flex gap-2">
               <input
@@ -94,6 +109,7 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
                   transition
                 "
               />
+
               <button
                 type="button"
                 onClick={handleAddCategory}
@@ -127,7 +143,9 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
       {/* Submit */}
       <button
         type="submit"
-        disabled={form.loading}
+        disabled={
+          form.loading || form.values.category === ADD_CATEGORY_OPTION
+        }
         className="
           mt-4 w-full
           bg-linear-to-r from-emerald-500 to-emerald-600

@@ -16,6 +16,6 @@ export async function executeTool(toolName, args, context) {
     return result;
   } catch (error) {
     console.error("Tool execution error:", error);
-    throw new Error(`Failed executing tool: ${toolName}`);
+    throw new Error(`Failed executing tool: ${toolName}`, { cause: error });
   }
 }

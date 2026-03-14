@@ -47,7 +47,7 @@ export const getExpenses = asyncHandler(async (req, res) => {
 });
 
 // DELETE: api/expeneses/:id
-export const removeExpense = asyncHandler(async (req, res, next) => {
+export const removeExpense = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const expenseId = req.params.id;
   await deleteExpenseService(expenseId, userId);
@@ -58,7 +58,7 @@ export const removeExpense = asyncHandler(async (req, res, next) => {
 });
 
 // PUT: api/expenses/:id
-export const editExpense = asyncHandler(async (req, res, next) => {
+export const editExpense = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const expenseId = Number(req.params.id);
 
