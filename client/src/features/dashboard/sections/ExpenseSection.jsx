@@ -1,55 +1,42 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import TableFilterBar from "../components/expensetable/TableFilterBar";
 import ExpenseTable from "../components/expensetable/ExpenseTable";
 import AddExpenseButton from "../components/AddExpenseButton";
 import useCategories from "../../../hooks/useCategories";
 import useExpense from "../hooks/useExpense";
 
+const DEFAULT_FILTERS = {
+  search: "",
+  category: "",
+  payment_method: "",
+  fromDate: "",
+  toDate: "",
+};
+
 export default function ExpenseSection() {
-  // 1. Filters state
-  const [filters, setFilters] = useState({
-    search: "",
-    category: "",
-    payment_method: "",
-    fromDate: "",
-    toDate: "",
-  });
 
-  // 2. Stable filters to prevent unnecessary re-fetch
-  const stableFilters = useMemo(
-    () => filters,
-    [
-      filters.search,
-      filters.category,
-      filters.payment_method,
-      filters.fromDate,
-      filters.toDate,
-    ],
-  );
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
-  // Function to Clear Filters 
   const clearFilters = () => {
-    setFilters({
-      search: "",
-      category: "",
-      payment_method: "",
-      fromDate: "",
-      toDate: "",
-    });
+    setFilters(DEFAULT_FILTERS);
   };
 
-  const filtersActive =   filters.search || filters.category || filters.payment_method || filters.fromDate || filters.toDate;
+  const filtersActive = Object.values(filters).some(Boolean);
 
-  // 3. Categories (for filter dropdown + add form)
   const { categories } = useCategories();
 
-  // 4. Expense state (single source of truth)
-  const { expenses, fetchExpenses, hasMore, loading, setExpenses,error,setError} =
-    useExpense(stableFilters);
+  const {
+    expenses,
+    fetchExpenses,
+    hasMore,
+    loading,
+    setExpenses,
+    error,
+    setError
+  } = useExpense(filters);
 
-  // 5. Insert new expense instantly (real-time update)
   const handleExpenseAdded = (newExpense) => {
-    setExpenses((prev) => [newExpense, ...prev]);
+    setExpenses(prev => [newExpense, ...prev]);
   };
 
   return (
@@ -70,11 +57,13 @@ export default function ExpenseSection() {
 
       {/* Filters */}
       <TableFilterBar
-      filters={filters}
-      setFilters={setFilters}
-      categories={categories}
-      clearFilters={clearFilters}
+        filters={filters}
+        setFilters={setFilters}
+        categories={categories}
+        clearFilters={clearFilters}
       />
+
+      {/* Table */}
       <ExpenseTable
         expenses={expenses}
         fetchExpenses={fetchExpenses}
@@ -84,10 +73,10 @@ export default function ExpenseSection() {
         loading={loading}
         setExpenses={setExpenses}
         categories={categories}
-        isFiltersActive ={filtersActive}
+        isFiltersActive={filtersActive}
         clearFilters={clearFilters}
         handleExpenseAdded={handleExpenseAdded}
-      />  
+      />
 
       {/* Floating Add Button */}
       <AddExpenseButton onSuccess={handleExpenseAdded} />

@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { Pencil } from "lucide-react";
+import React from "react";
 
-export default function ExpenseCard({ expense, onOpen, onEdit }) {
+function ExpenseCard({ expense, onOpen, onEdit }) {
   const clickTimeout = useRef(null);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
@@ -144,3 +145,5 @@ export default function ExpenseCard({ expense, onOpen, onEdit }) {
     </div>
   );
 }
+
+export default React.memo(ExpenseCard);
