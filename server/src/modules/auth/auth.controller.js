@@ -6,7 +6,9 @@ import {
   initiateRegistration,
   verifyRegistrationOTP,
   resendRegistrationOTP,
+  updateProfileService,
 } from "./auth.service.js";
+import { getTotalExpensesCount } from "../expenses/expense.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 // POST API -> /api/auth/register
 export const register = asyncHandler(async (req, res) => {
@@ -88,9 +90,13 @@ export const login = asyncHandler(async (req, res) => {
 
 // api/auth/me
 export const me = asyncHandler(async (req, res) => {
+  const expenseCount = await getTotalExpensesCount(req.user.id);
   res.status(200).json({
     success: true,
-    data: req.user,
+    data: {
+      ...req.user,
+      transactionCount: expenseCount,
+    },
   });
 });
 
@@ -132,5 +138,15 @@ export const resetPasswordController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Password reset successful",
+  });
+});
+
+export const updateProfileController = asyncHandler(async (req, res) => {
+  const updatedUser = await updateProfileService(req.user.id, req.body);
+
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    data: updatedUser,
   });
 });

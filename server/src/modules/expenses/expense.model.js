@@ -208,3 +208,12 @@ export async function getDistinctCategories(userId) {
   );
   return rows.map((r) => r.category);
 }
+
+// Get the total number of expenses for a user
+export async function getTotalExpensesCount(userId) {
+  const [[row]] = await pool.query(
+    "SELECT COUNT(*) AS total FROM expenses WHERE user_id = ?",
+    [userId],
+  );
+  return Number(row.total);
+}
