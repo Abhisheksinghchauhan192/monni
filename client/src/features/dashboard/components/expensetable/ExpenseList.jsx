@@ -1,7 +1,8 @@
-import { Loader } from "lucide-react";
+import { useRef, useEffect } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import ExpenseCard from "./components/ExpenseCard";
-import SentinelLoader from "./SentineLoader";
 import ExpenseCardSkeleton from "./components/ExpenseCardSkeleton";
+import { Loader } from "lucide-react";
 
 export default function ExpenseList({
   expenses,
@@ -9,41 +10,79 @@ export default function ExpenseList({
   fetchExpenses,
   onOpen,
   onEdit,
-  loading
+  loading,
 }) {
-  return (
-<div className="space-y-3 h-full overflow-y-auto pr-2">    
+  const parentRef = useRef(null);
 
-      {/* Skeleton on first load */}
+  // include loader row
+  const rowCount = hasMore ? expenses.length + 1 : expenses.length;
+
+  const rowVirtualizer = useVirtualizer({
+    count: rowCount,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 110,
+    overscan: 5,
+  });
+
+  const virtualRows = rowVirtualizer.getVirtualItems();
+
+  // infinite scroll trigger
+  useEffect(() => {
+    const lastRow = virtualRows[virtualRows.length - 1];
+
+    if (!lastRow) return;
+
+    if (lastRow.index >= expenses.length - 1 && hasMore && !loading) {
+      fetchExpenses(false);
+    }
+  }, [virtualRows, expenses.length, hasMore, loading]);
+
+  return (
+    <div ref={parentRef} className="h-full overflow-y-auto pr-2">
+      {/* First Load Skeleton */}
       {loading &&
         expenses.length === 0 &&
         [...Array(3)].map((_, i) => <ExpenseCardSkeleton key={i} />)}
 
+      <div
+        style={{
+          height: rowVirtualizer.getTotalSize(),
+          position: "relative",
+        }}
+      >
+        {virtualRows.map((virtualRow) => {
+          const isLoaderRow = virtualRow.index > expenses.length - 1;
+          const expense = expenses[virtualRow.index];
 
-      {/* Actual Cards */}
-      {expenses.map((exp) => (
-        <ExpenseCard
-          key={exp.id}
-          expense={exp}
-          onOpen={onOpen}
-          onEdit={onEdit}
-        />
-      ))}
-
-      {/* Bottom spinner for pagination */}
-      {loading && expenses.length > 0 && (
-        <div className="py-4 flex justify-center">
-          <Loader className="animate-spin text-emerald-400" />
-        </div>
-      )}
-
-      {/* Sentinel */}
-      <SentinelLoader
-        hasMore={hasMore}
-        loading={loading}
-        onVisible={() => fetchExpenses(false)}
-        itemsLength={expenses.length}
-      />
+          return (
+            <div
+              key={virtualRow.index}
+              className="pb-3"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+            >
+              {isLoaderRow ? (
+                hasMore ? (
+                  <div className="py-4 flex justify-center">
+                    <Loader className="animate-spin text-emerald-400" />
+                  </div>
+                ) : null
+              ) : (
+                <ExpenseCard
+                  expense={expense}
+                  onOpen={onOpen}
+                  onEdit={onEdit}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
