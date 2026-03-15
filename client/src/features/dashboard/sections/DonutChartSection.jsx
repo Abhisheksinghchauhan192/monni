@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useMemo } from "react";
+import { getCategoryMeta } from "../../../utils/getCategoryMeta";
 
 const COLORS = [
   "#10B981",
@@ -75,34 +76,89 @@ export default function DonutChartSection({ breakdown = [] }) {
         <div className="relative h-80 xl:h-full min-h-80">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
+              <defs>
+                <filter
+                  id="donutShadow"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                >
+                  <feDropShadow
+                    dx="0"
+                    dy="3"
+                    stdDeviation="6"
+                    floodOpacity="0.15"
+                  />
+                </filter>
+              </defs>
               <Pie
                 data={breakdown}
                 dataKey="total"
                 nameKey="label"
                 innerRadius={80}
                 outerRadius={140}
-                paddingAngle={3}
+                paddingAngle={4}
+                stroke="rgba(255,255,255,0.6)"
+                strokeWidth={2}
+                filter="url(#donutShadow)"
                 onMouseEnter={(_, index) => setActiveIndex(index)}
                 onMouseLeave={() => setActiveIndex(null)}
               >
-                {breakdown.map((entry, index) => (
-                  <Cell
-                    key={index}
-                    fill={COLORS[index % COLORS.length]}
-                    opacity={
-                      activeIndex === null || activeIndex === index ? 1 : 0.35
-                    }
-                  />
-                ))}
+                {breakdown.map((entry, index) => {
+                  const { color } = getCategoryMeta(entry.label);
+
+                  return (
+                    <Cell
+                      key={index}
+                      fill={color || COLORS[index % COLORS.length]}
+                      opacity={
+                        activeIndex === null || activeIndex === index ? 1 : 0.35
+                      }
+                    />
+                  );
+                })}
               </Pie>
+
+              {/* Emoji labels on slices */}
+              <Pie
+                data={breakdown}
+                dataKey="total"
+                nameKey="label"
+                innerRadius={80}
+                outerRadius={140}
+                label={({ name }) => {
+                  const { emoji } = getCategoryMeta(name);
+                  return emoji;
+                }}
+                labelLine={false}
+                stroke="none"
+                fill="transparent"
+              />
+
               <Tooltip
-                formatter={(value) => `₹ ${Number(value).toLocaleString()}`}
+                formatter={(value, name) => {
+                  const { emoji } = getCategoryMeta(name);
+                  return [
+                    `₹ ${Number(value).toLocaleString()}`,
+                    `${emoji} ${name}`,
+                  ];
+                }}
               />
             </PieChart>
           </ResponsiveContainer>
 
           {/* Center Total */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <div
+              className="
+    absolute w-36 h-36
+    rounded-full
+    bg-emerald-400/10
+    blur-2xl
+    dark:bg-emerald-500/10
+  "
+            />
             <span className="text-xs text-gray-500">Total</span>
             <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               ₹ {totalAmount.toLocaleString()}
@@ -116,33 +172,49 @@ export default function DonutChartSection({ breakdown = [] }) {
             {breakdown.map((item, index) => {
               const percent = ((item.total / totalAmount) * 100).toFixed(1);
 
+              const { emoji, chip } = getCategoryMeta(item.label);
+
               return (
                 <div
                   key={index}
                   onMouseEnter={() => setActiveIndex(index)}
                   onMouseLeave={() => setActiveIndex(null)}
-                  className="flex items-center justify-between
-                             px-4 py-3 rounded-xl
-                             bg-gray-50 dark:bg-gray-800
-                             transition-all duration-200
-                             hover:shadow-md cursor-pointer"
+                  className="
+        flex items-center justify-between
+        px-4 py-3 rounded-xl
+        bg-gray-50 dark:bg-gray-800
+        border border-transparent
+        hover:border-gray-200 dark:hover:border-zinc-700
+        transition-all
+        cursor-pointer
+      "
                 >
+                  {/* Left */}
                   <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{
-                        backgroundColor: COLORS[index % COLORS.length],
-                      }}
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
-                      {item.label}
+                    {/* Category Pill */}
+                    <span
+                      className={`
+          inline-flex items-center gap-1
+          px-2.5 py-[3px]
+          rounded-md
+          text-[12px]
+          font-medium
+          whitespace-nowrap
+          ${chip}
+          `}
+                    >
+                      {emoji}
+
+                      {" "+item.label}
                     </span>
                   </div>
 
-                  <div className="text-right">
+                  {/* Right */}
+                  <div className="text-right ml-3">
                     <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       ₹ {Number(item.total).toLocaleString()}
                     </div>
+
                     <div className="text-xs text-gray-400">{percent}%</div>
                   </div>
                 </div>

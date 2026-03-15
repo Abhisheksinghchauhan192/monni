@@ -1,37 +1,48 @@
-  import {motion} from "framer-motion";
   import CountUp from "react-countup";
 
-  export  const Card = ({ title, value, subtitle, extra }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="bg-white dark:bg-gray-900 
-                 border border-gray-200 dark:border-gray-800 
-                 rounded-2xl p-6 shadow-sm
-                 hover:shadow-md transition-all duration-300"
+  export function Card({ title, value, subtitle, extra }) {
+
+  const formattedValue =
+    typeof value === "number"
+      ? `₹ ${value.toLocaleString()}`
+      : value;
+
+  return (
+    <div
+      className="
+      relative overflow-hidden
+      bg-gradient-to-b
+      from-white via-white to-gray-50
+      dark:from-gray-950 dark:via-gray-900 dark:to-gray-950
+      border border-gray-200 dark:border-zinc-800
+      rounded-2xl p-6
+      shadow-sm
+      flex flex-col gap-2
+    "
     >
-      <div className="flex justify-between items-center">
-        <p className="text-xs text-gray-500 uppercase tracking-wide">
+      {/* subtle highlight */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/40 to-transparent dark:from-white/[0.03]" />
+
+      {/* Header */}
+      <div className="flex items-center justify-between relative">
+        <p className="text-xs text-gray-400 uppercase tracking-wide">
           {title}
         </p>
+
         {extra}
       </div>
 
-      <h3 className="text-2xl font-bold mt-3 text-gray-900 dark:text-gray-100">
-        <CountUp
-          end={value}
-          duration={1}
-          separator=","
-          decimals={title.includes("Avg") ? 2 : 0}
-          prefix={title.includes("₹") || title.includes("Spend") ? "₹ " : ""}
-        />
-      </h3>
+      {/* Value */}
+      <div className="relative">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+          {formattedValue}
+        </h3>
+      </div>
 
-      {subtitle && (
-        <p className="text-xs text-gray-400 mt-2">
-          {subtitle}
-        </p>
-      )}
-    </motion.div>
+      {/* Subtitle */}
+      <p className="text-xs text-gray-500 relative">
+        {subtitle}
+      </p>
+    </div>
   );
+}
