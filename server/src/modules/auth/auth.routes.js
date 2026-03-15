@@ -9,13 +9,15 @@ import {
   initiateRegister,
   verifyRegisterOTP,
   resendRegisterOTP,
+  updateProfileController,
 } from "./auth.controller.js";
 import { validateBody } from "../../validators/validate.js";
 import {
   registerSchema,
   loginSchema,
 } from "../../validators/auth/auth.schema.js";
-import { otpSchema,resendOtpSchema} from "../../validators/auth/otp.schema.js";
+import { profileUpdateSchema } from "../../validators/auth/profile.schema.js";
+import { otpSchema, resendOtpSchema } from "../../validators/auth/otp.schema.js";
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -70,4 +72,12 @@ router.post(
   validateBody(resetPasswordSchema),
   resetPasswordController,
 );
+
+router.put(
+  "/profile",
+  authMiddleWare,
+  validateBody(profileUpdateSchema),
+  updateProfileController,
+);
+
 export default router;
