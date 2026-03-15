@@ -17,11 +17,12 @@ export default function ExpenseList({
   // include loader row
   const rowCount = hasMore ? expenses.length + 1 : expenses.length;
 
+  const ROW_HEIGHT = 110; // card height + gap
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 110,
-    overscan: 5,
+    estimateSize: () => ROW_HEIGHT,
+    overscan: 6,
   });
 
   const virtualRows = rowVirtualizer.getVirtualItems();
@@ -57,31 +58,34 @@ export default function ExpenseList({
           return (
             <div
               key={virtualRow.index}
-              className="pb-3"
               style={{
                 position: "absolute",
                 top: 0,
                 left: 0,
                 width: "100%",
+                height: ROW_HEIGHT,
                 transform: `translateY(${virtualRow.start}px)`,
               }}
+              className="px-1"
             >
-              {isLoaderRow ? (
-                hasMore ? (
-                  <div className="py-4 flex justify-center">
-                    <Loader className="animate-spin text-emerald-400" />
-                  </div>
-                ) : null
-              ) : (
-                <ExpenseCard
-                  expense={expense}
-                  onOpen={onOpen}
-                  onEdit={onEdit}
-                />
-              )}
+              <div className="h-full pb-3">
+                {isLoaderRow ? (
+                  hasMore ? (
+                    <div className="py-4 flex justify-center">
+                      <Loader className="text-emerald-500" />
+                    </div>
+                  ) : null
+                ) : (
+                  <ExpenseCard
+                    expense={expense}
+                    onOpen={onOpen}
+                    onEdit={onEdit}
+                  />
+                )}
+              </div>
             </div>
           );
-        })}
+        })} 
       </div>
     </div>
   );
