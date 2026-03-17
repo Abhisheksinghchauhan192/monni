@@ -9,7 +9,6 @@ import {
   initiateRegister,
   verifyRegisterOTP,
   resendRegisterOTP,
-  updateProfileController,
 } from "./auth.controller.js";
 import { validateBody } from "../../validators/validate.js";
 import {
@@ -73,11 +72,5 @@ router.post(
   resetPasswordController,
 );
 
-router.put(
-  "/profile",
-  authMiddleWare,
-  validateBody(profileUpdateSchema),
-  updateProfileController,
-);
 
 export default router;

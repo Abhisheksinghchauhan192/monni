@@ -26,6 +26,8 @@ import {
   deletePending,
 } from "./pendingRegistration.model.js";
 import { cleanupExpiredRegistrations } from "../../services/cleanup.service.js";
+import { getUserBasicDetails } from "./auth.model.js";
+
 
 // Registration of User Business Logic
 export async function registerUser({ name, email, password }) {
@@ -207,31 +209,8 @@ export async function resendRegistrationOTP(email) {
   return { email };
 }
 
-// Update User Profile Service
-export async function updateProfileService(id, data) {
-  // We only allow editing certain fields (name, mobile)
-  const allowedUpdates = {
-    name: data.name,
-    mobile: data.mobile,
-  };
-
-  // Remove undefined values
-  Object.keys(allowedUpdates).forEach(
-    (key) => allowedUpdates[key] === undefined && delete allowedUpdates[key],
-  );
-
-  if (Object.keys(allowedUpdates).length === 0) {
-    throw new ApiError(400, "No valid update data provided");
-  }
-
-  await updateUserProfile(id, allowedUpdates);
-
-  const updatedUser = await findUserById(id);
-
-  return {
-    publicId: updatedUser.public_id,
-    email: updatedUser.email,
-    name: updatedUser.name,
-    mobile: updatedUser.mobile,
-  };
+// Get Basic user Data 
+export async function getUserDetailsService(userId){
+  const user = await getUserBasicDetails(userId);
+  return user;
 }
