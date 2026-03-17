@@ -6,7 +6,6 @@ export const DEFAULT_CATEGORIES = [
   "Utilities",
   "Health",
   "Shopping",
-  "Gifts",
   "Housing",
   "Books",
   "Stationary",
