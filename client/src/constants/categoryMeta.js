@@ -62,7 +62,7 @@ export const CATEGORY_META = {
       "bg-lime-50 text-lime-700 dark:bg-lime-900/40 dark:text-lime-300",
   },
 
-  gifts: {
+  gift: {
     emoji: "🎁",
     color: "#F97316",
     chip:
