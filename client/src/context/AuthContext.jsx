@@ -1,5 +1,8 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { getCurrentUser, logoutUser, updateProfile as updateProfileApi } from "../api/auth.api";
+import {
+  getCurrentUser,
+  logoutUser,
+} from "../api/auth.api";
 
 const AuthContext = createContext();
 
@@ -13,7 +16,7 @@ export function AuthProvider({ children }) {
       try {
         const response = await getCurrentUser();
         setUser(response.data);
-      } catch  {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -24,14 +27,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = async () => {
-    await logoutUser();
-    setUser(null);
-  };
-
-  const updateProfile = async (data) => {
-    const response = await updateProfileApi(data);
-    setUser(response.data);
-    return response;
+    try {
+      await logoutUser();
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
@@ -42,7 +44,6 @@ export function AuthProvider({ children }) {
         loading,
         setUser,
         logout,
-        updateProfile,
       }}
     >
       {children}
