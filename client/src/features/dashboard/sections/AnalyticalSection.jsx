@@ -5,7 +5,6 @@ import TrendCharts from "../components/TrendCharts";
 import useDashboardFilter from "../hooks/useDashboardFilter";
 import useDashboard from "../hooks/useDashboard";
 import AnalyticsSkeleton from "../components/AnalyticsSkeleton";
-import AIInsights from "../components/AIInsights/AIInsights";
 
 export default function AnalyticsSection() {
   const { filter, updateMode, updateField } = useDashboardFilter();
@@ -78,10 +77,6 @@ export default function AnalyticsSection() {
             {/* Donut */}
             <div className="xl:col-span-3 h-full">
               <DonutChartSection breakdown={data.breakdown} />
-            </div>
-
-            <div className="sm:hidden">
-              <AIInsights />
             </div>
             {/* Summary */}
             <div className="xl:col-span-2 h-full flex">

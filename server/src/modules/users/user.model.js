@@ -13,7 +13,7 @@ export async function createUser({ name, email, passwordHash }) {
     publicId,
   };
 }
-
+// User Utility function
 export async function findUserByEmail(email) {
   const [rows] = await pool.query(`SELECT * FROM users WHERE email = ?`, [
     email,
@@ -21,7 +21,7 @@ export async function findUserByEmail(email) {
 
   return rows[0] || null;
 }
-
+// User Utility function
 export async function findUserById(id) {
   const [rows] = await pool.query(
     `SELECT id, public_id, name, email, mobile, profile_image, is_verified
@@ -31,27 +31,17 @@ export async function findUserById(id) {
 
   return rows[0] || null;
 }
+// User Utility Function
+export async function findPasswordHashById(id) {
+  const [rows] = await pool.query(
+    `
+    SELECT password_hash FROM users WHERE id = ?
 
-export async function updateUserProfile(id, data) {
-  const fields = [];
-  const values = [];
+    `
+    , [id]);
 
-  for (const [key, value] of Object.entries(data)) {
-    fields.push(`${key} = ?`);
-    values.push(value);
-  }
-  if (fields.length === 0) return;
-  values.push(id);
-
-  const query = `
-    UPDATE users SET
-    ${fields.join(", ")}
-    WHERE id = ?
-    `;
-
-  await pool.query(query, values);
+  return rows[0] || null;
 }
-
 // Password reseting logic
 export async function saveResetToken(id, hashedToken, expiresAt) {
   await pool.query(
@@ -64,6 +54,7 @@ export async function saveResetToken(id, hashedToken, expiresAt) {
   );
 }
 
+// Password reset Helper
 export async function findUserByResetToken(hashedToken) {
   const [rows] = await pool.query(
     `
@@ -78,6 +69,50 @@ export async function findUserByResetToken(hashedToken) {
   return rows[0] || null;
 }
 
+// Password reset utility function
+export async function clearResetToken(id) {
+  await pool.query(
+    `
+    UPDATE users
+    SET reset_token = NULL,
+        reset_token_expires = NULL
+    WHERE id = ?
+    `,
+    [id],
+  );
+}
+
+// ------------------------------------------------------------
+// User Updation Implimentation  .....
+
+// Update Profile Image,Name,Profile picture.
+export async function updateUserProfile(id, data) {
+  const allowedFields = ["name", "mobile", "profile_image"];
+
+  const fields = [];
+  const values = [];
+
+  for (const key of allowedFields) {
+    if (data[key] !== undefined) {
+      fields.push(`${key} = ?`);
+      values.push(data[key]);
+    }
+  }
+
+  if (fields.length === 0) return;
+
+  values.push(id);
+
+  const query = `
+    UPDATE users SET
+    ${fields.join(", ")}
+    WHERE id = ?
+  `;
+
+  await pool.query(query, values);
+}
+
+// update user password
 export async function updateUserPassword(id, passwordHash) {
   await pool.query(
     `
@@ -89,14 +124,12 @@ export async function updateUserPassword(id, passwordHash) {
   );
 }
 
-export async function clearResetToken(id) {
+// delete user Account
+export async function deleteUserAccount(userId) {
   await pool.query(
     `
-    UPDATE users
-    SET reset_token = NULL,
-        reset_token_expires = NULL
-    WHERE id = ?
+    DELETE FROM  users  WHERE id = ?
     `,
-    [id],
+    [userId],
   );
 }

@@ -12,7 +12,7 @@ function handleZodError(err, next) {
 export function validateBody(schema) {
   return (req, res, next) => {
     try {
-      req.body = schema.parse(req.body);
+       req.body = schema.parse(req.body);
       next();
     } catch (err) {
       handleZodError(err, next);
