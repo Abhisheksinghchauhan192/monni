@@ -2,7 +2,7 @@ import { useAuth } from "../../context/AuthContext";
 import AccountSection from "./sections/AccountSection";
 import SecuritySection from "./sections/SecuritySection";
 import PersonalizationSection from "./sections/PersonalizationSection";
-import CategoriesSection from "./sections/CategoriesSection";
+import CategoriesSection from "./sections/CategoryManagementSection";
 
 export default function Profile() {
   const { user, loading } = useAuth();

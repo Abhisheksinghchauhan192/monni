@@ -103,7 +103,7 @@ export default function FilterBar({ filter, updateMode, updateField }) {
                              bg-gray-50 dark:bg-gray-800
                              text-sm shadow-sm"
                 >
-                  {[2023, 2024, 2025, 2026].map((year) => (
+                  {[2023, 2024, 2025, 2026,2027,2028,2029,2030,2031,2032,2033,2034,2035].map((year) => (
                     <option key={year}>{year}</option>
                   ))}
                 </select>
@@ -120,7 +120,7 @@ export default function FilterBar({ filter, updateMode, updateField }) {
                            bg-gray-50 dark:bg-gray-800
                            text-sm shadow-sm"
               >
-                {[2023, 2024, 2025, 2026].map((year) => (
+                {[2023, 2024, 2025, 2026,2027,2028,2029,2030,2031,2032,2033,2034,2035].map((year) => (
                   <option key={year}>{year}</option>
                 ))}
               </select>

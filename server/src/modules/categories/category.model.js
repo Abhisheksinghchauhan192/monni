@@ -24,16 +24,16 @@ export async function findCategory(userId, name) {
 
   const [rows] = await pool.query(
     `
-    SELECT id FROM categories
+    SELECT id, is_active FROM categories
     WHERE normalized_name = ?
       AND (user_id = ? OR user_id IS NULL)
-      AND is_active = TRUE
     `,
     [normalized, userId]
   );
 
   return rows[0] || null;
 }
+
 
 // CREATE
 export async function createCategory(userId, name, emoji) {
@@ -119,5 +119,19 @@ export async function updateExpensesCategory(userId, oldName, newName) {
     WHERE user_id = ? AND LOWER(category) = ?
     `,
     [newName, userId, normalize(oldName)]
+  );
+}
+
+//Reactivate Category
+
+export async function reactivateCategory(id, emoji) {
+  await pool.query(
+    `
+    UPDATE categories
+    SET is_active = TRUE,
+        emoji = ?
+    WHERE id = ?
+    `,
+    [emoji || "🏷️", id]
   );
 }

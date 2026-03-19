@@ -1,130 +1,159 @@
 import { useState, useEffect, useMemo } from "react";
 import {
-  DEFAULT_CATEGORIES,
-  MAX_CUSTOM_CATEGORIES,
-} from "../constants/categories";
+  fetchCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "../features/profile/services/category.api";
 
-import { fetchCategories } from "../features/dashboard/services/expenses.api";
-
-const STORAGE_KEY = "monni_custom_categories";
+import { getCategoryMeta } from "../utils/getCategoryMeta";
 
 /* ---------- Helpers ---------- */
 
 function normalizeCategory(name) {
-  return name.trim().toLowerCase();
+  
+  return name?.trim().toLowerCase();
 }
 
 function toTitleCase(str) {
+  if (!str) return "";
   return str
     .split(" ")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 }
 
-/* ---------- Global cache ---------- */
-
-let cachedDbCategories = null;
-let fetchingPromise = null;
-
 /* ---------- Hook ---------- */
 
 export default function useCategories() {
-  const [dbCategories, setDbCategories] = useState([]);
-  const [customCategories, setCustomCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  /* Load DB categories (cached) */
-  useEffect(() => {
-    async function load() {
-      try {
-        if (cachedDbCategories) {
-          setDbCategories(cachedDbCategories);
-          return;
-        }
+  /* ---------- Load ---------- */
 
-        if (!fetchingPromise) {
-          fetchingPromise = fetchCategories();
-        }
+  const loadCategories = async () => {
+    try {
+      setLoading(true);
 
-        const res = await fetchingPromise;
+      const res = await fetchCategories();
+      const data = res.data?.categories || [];
 
-        cachedDbCategories = res?.categories || [];
-
-        setDbCategories(cachedDbCategories);
-      } catch (err) {
-        console.error("Failed to fetch categories", err);
-      }
+      setCategories(data);
+    } catch (err) {
+      console.error("Failed to fetch categories", err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    load();
+  useEffect(() => {
+    loadCategories();
   }, []);
 
-  /* Load local custom categories */
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+  /* ---------- Derived UI ---------- */
 
-    if (stored) {
-      try {
-        setCustomCategories(JSON.parse(stored));
-      } catch {
-        setCustomCategories([]);
-      }
-    }
-  }, []);
+  const formattedCategories = useMemo(() => {
+    return categories.map((c) => {
+      const meta = getCategoryMeta(c.name);
 
-  /* Persist custom categories */
-  useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(customCategories)
-    );
-  }, [customCategories]);
+      return {
+        id: c.id,
+        name: normalizeCategory(c.name),
+        label: toTitleCase(c.name),
+        emoji: c.emoji || meta.emoji,
+        chip: meta.chip,
+        user_id: c.user_id,
+      };
+    });
+  }, [categories]);
 
-  /* Merge categories safely */
-  const categories = useMemo(() => {
-    const map = new Map();
+  /* ---------- ADD ---------- */
 
-    const all = [
-      ...DEFAULT_CATEGORIES,
-      ...dbCategories,
-      ...customCategories,
-    ];
-
-    for (const cat of all) {
-      const normalized = normalizeCategory(cat);
-
-      if (!map.has(normalized)) {
-        map.set(normalized, toTitleCase(normalized));
-      }
-    }
-
-    return Array.from(map.values()).sort();
-  }, [dbCategories, customCategories]);
-
-  /* Add custom category */
-  const addCustomCategory = (name) => {
+  const addCategory = async (name, emoji = "🏷️") => {
     const normalized = normalizeCategory(name);
 
-    if (!normalized) return { error: "Empty category" };
+    
+    try {
+      const exists = categories.find(
+        (c) => normalizeCategory(c.name) === normalized,
+      );
 
-    const exists = categories.some(
-      (c) => normalizeCategory(c) === normalized
-    );
+      if (exists) {
+        return { success: true, data: exists };
+      }
+      const res = await createCategory({
+        name: normalized,
+        emoji,
+      });
 
-    if (exists) return { error: "Already exists" };
+      const newCat = {
+        id: res.data.id,
+        name: normalized,
+        emoji,
+        user_id: res.data.userId || true, //force it as custom
+      };
 
-    if (customCategories.length >= MAX_CUSTOM_CATEGORIES)
-      return { error: "Custom Category Limit Reached !" };
+      setCategories((prev) => [...prev, newCat]);
 
-    setCustomCategories((prev) => [
-      ...prev,
-      toTitleCase(normalized),
-    ]);
+      return { success: true, data: newCat };
+    } catch (err) {
+      return {
+        error: err?.response?.data?.message || "Failed to create category",
+      };
+    }
+  };
 
-    return { success: true };
+  /* ---------- UPDATE ---------- */
+
+  const editCategory = async (id, data) => {
+    try {
+      await updateCategory(id, data);
+
+      setCategories((prev) =>
+        prev.map((c) =>
+          c.id === id
+            ? {
+                ...c,
+                ...data,
+                name: data.name ? normalizeCategory(data.name) : c.name,
+              }
+            : c,
+        ),
+      );
+
+      return { success: true };
+    } catch (err) {
+      return {
+        error: err?.response?.data?.message || "Update failed",
+      };
+    }
+  };
+
+  /* ---------- DELETE ---------- */
+
+  const removeCategory = async (id) => {
+    try {
+      await deleteCategory(id);
+
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+
+      return { success: true };
+    } catch (err) {
+      return {
+        error: err?.response?.data?.message || "Delete failed",
+      };
+    }
   };
 
   return {
-    categories,
-    addCustomCategory,
+    categories: formattedCategories,
+    rawCategories: categories,
+
+    loading,
+    reload: loadCategories,
+
+    addCategory,
+    editCategory,
+    removeCategory,
   };
 }

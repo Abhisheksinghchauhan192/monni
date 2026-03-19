@@ -57,8 +57,8 @@ export default function TableFilterBar({
           >
             <option value="">Category</option>
             {categories.map((c) => (
-              <option value={c} key={c}>
-                {c}
+              <option value={c.name} key={c.id}>
+                {c.emoji} {c.label}
               </option>
             ))}
           </select>

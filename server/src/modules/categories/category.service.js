@@ -6,6 +6,7 @@ import {
     updateCategory,
     deactivateCategory,
     updateExpensesCategory,
+    reactivateCategory,
 }from "./category.model.js"
 
 import ApiError from "../../errors/ApiError.js";
@@ -19,13 +20,28 @@ export async function fetchCategories(userId) {
 // CREATE
 export async function addCategory(userId, name, emoji) {
   const count = await countUserCategories(userId);
+
   if (count >= MAX_CUSTOM) {
     throw new ApiError(400, "Custom category limit reached");
   }
 
   const exists = await findCategory(userId, name);
+
   if (exists) {
-    throw new ApiError(400, "Category already exists");
+    if (exists.is_active) {
+      throw new ApiError(400, "Category already exists");
+    }
+
+    // revive instead of creating
+    await reactivateCategory(exists.id, emoji);
+
+    return {
+      id: exists.id,
+      name,
+      emoji,
+      revived: true,
+      userId:userId,
+    };
   }
 
   const id = await createCategory(userId, name, emoji);
@@ -35,15 +51,18 @@ export async function addCategory(userId, name, emoji) {
 
 // UPDATE
 export async function editCategory(userId, categoryId, data) {
-  // duplicate check (if renaming)
   if (data.name) {
-    const exists = await findCategory(userId, data.name);
-    if (exists) {
+    const normalized = data.name.trim().toLowerCase();
+
+    const exists = await findCategory(userId, normalized);
+
+    if (exists && exists.id != categoryId) {
       throw new ApiError(400, "Category already exists");
     }
+
+    data.name = normalized;
   }
 
-  // get old name
   const categories = await getCategories(userId);
   const current = categories.find((c) => c.id == categoryId);
 
@@ -51,10 +70,8 @@ export async function editCategory(userId, categoryId, data) {
     throw new ApiError(404, "Category not found");
   }
 
-  // update category
   await updateCategory(categoryId, userId, data);
 
-  // sync expenses if renamed
   if (data.name && data.name !== current.name) {
     await updateExpensesCategory(userId, current.name, data.name);
   }
