@@ -4,7 +4,11 @@ import {
   updateUserPassword,
   deleteUserAccount,
   findPasswordHashById,
+  createUserSettings,
+  getUserSettings,
+  updateUserSettings,
 } from "./user.model.js";
+
 import { comparePassword, hashPassword } from "../../utils/password.js";
 import ApiError from "../../errors/ApiError.js";
 
@@ -44,4 +48,27 @@ export async function deleteAccountService(userId) {
   // Later: soft delete or cascade cleanup
 
   await deleteUserAccount(userId);
+}
+
+//----------------------------------------------------------
+// User Personalization Settings Services 
+//------------------------------------------------------
+
+// Fetch users settings.
+export async function fetchUserSettings(userId) {
+  let settings = await getUserSettings(userId);
+
+  // auto-create if not exists
+  if (!settings) {
+    await createUserSettings(userId);
+    settings = await getUserSettings(userId);
+  }
+
+  return settings;
+}
+
+//Update Users Settings
+export async function modifyUserSettings(userId, data) {
+  await updateUserSettings(userId, data);
+  return await getUserSettings(userId);
 }

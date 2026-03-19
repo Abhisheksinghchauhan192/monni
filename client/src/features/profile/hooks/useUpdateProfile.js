@@ -10,6 +10,10 @@ export default function useUpdateProfile(user, onClose) {
 
   const handleUpdate = async (data) => {
     try {
+
+      if(data.name.trim() ===user.name && data.mobile===user.mobile){
+        return;
+      }
       const res = await updateProfile(data);
 
       // Merge into Global User..

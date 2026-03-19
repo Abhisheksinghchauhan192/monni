@@ -3,6 +3,8 @@ import {
   updateProfileService,
   changePasswordService,
   deleteAccountService,
+  fetchUserSettings,
+  modifyUserSettings,
 } from "./user.service.js";
 
 //update user profile POST: /users/profile
@@ -13,7 +15,7 @@ export const updateProfileController = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    message:"Profile Updated ",
+    message: "Profile Updated ",
     data: updatedData,
   });
 });
@@ -46,5 +48,34 @@ export const deleteAccountController = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Account deleted successfully",
+  });
+});
+
+//---------------------------------------------------
+// User Personalization controllers
+//----------------------------------------------------
+
+// get User Personalization settings
+export const getUserSettingsController = asyncHandler(async (req, res) => {
+  const userId = req.user.id; // from auth middleware
+
+  const settings = await fetchUserSettings(userId);
+
+  res.json({
+    success: true,
+    data: settings,
+  });
+});
+
+// Set users Personalization settings.
+export const updateUserSettingsController = asyncHandler(async (req, res) => {
+  const userId = req.user.id; // from auth middleware
+
+  const updated = await modifyUserSettings(userId, req.body);
+
+  res.json({
+    success: true,
+    message: "Settings updated successfully",
+    data: updated,
   });
 });

@@ -42,8 +42,8 @@ export default function Profile() {
         {/* Sections */}
         <AccountSection user={user} />
         <PersonalizationSection />
-        <SecuritySection />
         <CategoriesSection />
+        <SecuritySection />
 
       </div>
     </div>

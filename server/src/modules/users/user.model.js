@@ -133,3 +133,50 @@ export async function deleteUserAccount(userId) {
     [userId],
   );
 }
+
+//--------------------------------------------------------------
+// Users Personalization Settings 
+//--------------------------------------------------------------
+
+// Get settings
+export async function getUserSettings(userId) {
+  const [rows] = await pool.query(
+    `SELECT currency, timezone, theme
+     FROM user_settings
+     WHERE user_id = ?`,
+    [userId]
+  );
+
+  return rows[0] || null;
+}
+
+// Create default settings (on first access)
+export async function createUserSettings(userId) {
+  await pool.query(
+    `INSERT INTO user_settings (user_id) VALUES (?)`,
+    [userId]
+  );
+}
+
+// Update settings
+export async function updateUserSettings(userId, data) {
+  const fields = [];
+  const values = [];
+
+  for (const [key, value] of Object.entries(data)) {
+    fields.push(`${key} = ?`);
+    values.push(value);
+  }
+
+  if (fields.length === 0) return;
+
+  values.push(userId);
+
+  const query = `
+    UPDATE user_settings
+    SET ${fields.join(", ")}
+    WHERE user_id = ?
+  `;
+
+  await pool.query(query, values);
+}
