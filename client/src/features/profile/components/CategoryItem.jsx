@@ -1,10 +1,10 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import EditCategoryModal from "./EditCategoryModal";
+import { DeleteButton } from "./ui/DeleteButton";
 
 export default function CategoryItem({ category, onDelete, onEdit }) {
   const [open, setOpen] = useState(false);
-  const [confirm, setConfirm] = useState(false);
   return (
     <>
       <div
@@ -34,29 +34,7 @@ export default function CategoryItem({ category, onDelete, onEdit }) {
             <Pencil size={16} />
           </button>
 
-          {confirm ? (
-            <div className="flex gap-2">
-              <button
-                onClick={() => setConfirm(false)}
-                className="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-600"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={onDelete}
-                className="px-3 py-1 rounded-lg bg-red-500 text-white"
-              >
-                Confirm
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setConfirm(true)}
-              className="p-2 rounded-lg text-red-500"
-            >
-              <Trash2 size={16} />
-            </button>
-          )}
+         <DeleteButton onDelete={onDelete}/> 
         </div>
       </div>
 
