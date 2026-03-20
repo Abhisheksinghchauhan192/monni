@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { addExpenseSchema } from "../schema/addExpense.schema";
-import useCategories from "../../../hooks/useCategories";
+import { useCategories } from "../../../context/CategoriesContext";
 import { PAYMENT_METHODS } from "../../../constants/paymentMethods";
 import { InputField } from "./ui/FormFields";
 import useForm from "../../../hooks/useForm";

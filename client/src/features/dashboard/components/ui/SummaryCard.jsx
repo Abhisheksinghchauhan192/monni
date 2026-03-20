@@ -2,11 +2,6 @@
 
   export function Card({ title, value, subtitle, extra }) {
 
-  const formattedValue =
-    typeof value === "number"
-      ? `₹ ${value.toLocaleString()}`
-      : value;
-
   return (
     <div
       className="
@@ -35,7 +30,7 @@
       {/* Value */}
       <div className="relative">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
-          {formattedValue}
+          {value}
         </h3>
       </div>
 

@@ -1,10 +1,12 @@
-export default function CustomTooltip({ active, payload }) {
-  if (!active || !payload?.length) return null;
+import useCurrency from "../../../../hooks/useCurrency";
 
+export default function CustomTooltip({ active, payload }) {
+  const{format} = useCurrency();
+
+  if (!active || !payload?.length) return null;
   const data = payload[0].payload;
 
   if (!data) return null;
-
   return (
     <div
       className="bg-white dark:bg-gray-800
@@ -22,7 +24,7 @@ export default function CustomTooltip({ active, payload }) {
       {/* Amount */}
       <div className="mt-2">
         <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          ₹{data.total.toLocaleString()}
+          {format(data.total)}
         </p>
       </div>
 

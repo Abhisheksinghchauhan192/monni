@@ -2,8 +2,8 @@ import { useState } from "react";
 import TableFilterBar from "../components/expensetable/TableFilterBar";
 import ExpenseTable from "../components/expensetable/ExpenseTable";
 import AddExpenseButton from "../components/AddExpenseButton";
-import useCategories from "../../../hooks/useCategories";
 import useExpense from "../hooks/useExpense";
+import { useCategories } from "../../../context/CategoriesContext";
 
 const DEFAULT_FILTERS = {
   search: "",

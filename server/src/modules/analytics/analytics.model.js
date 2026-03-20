@@ -137,3 +137,12 @@ export async function getEarliestExpenseDate(userId) {
 
   return row.earliest || null;
 }
+
+export async function getCurrencyDetail(userId){
+  const[[row]] = await pool.query(
+    `
+    SELECT currency FROM user_settings WHERE user_id = ?
+    `,[userId]
+  )
+  return row.currency;
+}

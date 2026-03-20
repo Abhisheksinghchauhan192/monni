@@ -9,7 +9,6 @@ import AnalyticsSkeleton from "../components/AnalyticsSkeleton";
 export default function AnalyticsSection() {
   const { filter, updateMode, updateField } = useDashboardFilter();
   const { data, loading, error } = useDashboard(filter);
-
   return (
     <div className="space-y-8">
       <FilterBar

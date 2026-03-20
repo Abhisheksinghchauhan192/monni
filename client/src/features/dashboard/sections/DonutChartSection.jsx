@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useMemo } from "react";
-import { getCategoryMeta } from "../../../utils/getCategoryMeta";
-
+import useCurrency from "../../../hooks/useCurrency";
+import {useCategories} from "../../../context/CategoriesContext"
 const COLORS = [
   "#10B981",
   "#3B82F6",
@@ -13,7 +13,8 @@ const COLORS = [
 
 export default function DonutChartSection({ breakdown = [] }) {
   const [activeIndex, setActiveIndex] = useState(null);
-
+  const { format } = useCurrency();
+  const{getCategoryMeta} = useCategories();
   const totalAmount = useMemo(() => {
     return breakdown.reduce((sum, item) => sum + Number(item.total), 0);
   }, [breakdown]);
@@ -139,10 +140,7 @@ export default function DonutChartSection({ breakdown = [] }) {
               <Tooltip
                 formatter={(value, name) => {
                   const { emoji } = getCategoryMeta(name);
-                  return [
-                    `₹ ${Number(value).toLocaleString()}`,
-                    `${emoji} ${name}`,
-                  ];
+                  return [` ${format(value)}`, `${emoji} ${name}`];
                 }}
               />
             </PieChart>
@@ -160,8 +158,8 @@ export default function DonutChartSection({ breakdown = [] }) {
   "
             />
             <span className="text-xs text-gray-500">Total</span>
-            <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-              ₹ {totalAmount.toLocaleString()}
+            <span className="text-2xl font-bold text-gray-900 dark:text-gray-200 ">
+              {format(totalAmount)}
             </span>
           </div>
         </div>
@@ -205,14 +203,14 @@ export default function DonutChartSection({ breakdown = [] }) {
                     >
                       {emoji}
 
-                      {" "+item.label}
+                      {" " + item.label}
                     </span>
                   </div>
 
                   {/* Right */}
                   <div className="text-right ml-3">
                     <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                      ₹ {Number(item.total).toLocaleString()}
+                      {format(item.total)}
                     </div>
 
                     <div className="text-xs text-gray-400">{percent}%</div>

@@ -6,7 +6,7 @@ import { AuthProvider } from "../context/AuthContext";
 import { ToastProvider } from "../context/ToastContext";
 import { Analytics } from "@vercel/analytics/react";
 import { SettingsProvider } from "../context/SettingsContext";
-
+import { CategoriesProvider } from "../context/CategoriesContext";
 export default function App() {
   return (
     <>
@@ -15,7 +15,9 @@ export default function App() {
           <ToastProvider>
             <AuthProvider>
               <SettingsProvider>
-                <RouterProvider router={router} />
+                <CategoriesProvider>
+                  <RouterProvider router={router} />
+                </CategoriesProvider>
               </SettingsProvider>
             </AuthProvider>
           </ToastProvider>

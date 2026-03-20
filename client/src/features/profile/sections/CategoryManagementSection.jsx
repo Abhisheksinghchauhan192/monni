@@ -1,4 +1,4 @@
-import useCategories from "../../../hooks/useCategories";
+import { useCategories } from "../../../context/CategoriesContext";
 import CategoryItem from "../components/CategoryItem";
 import { useState } from "react";
 
@@ -12,8 +12,8 @@ export default function CategoryManagementSection() {
 
   /* ---------- Split categories ---------- */
 
-  const customCategories = categories.filter((c) => c.user_id);
-  const defaultCategories = categories.filter((c) => !c.user_id);
+  const customCategories = categories.filter((c) => c.user_id != null);
+  const defaultCategories = categories.filter((c) => c.user_id == null);
 
   /* ---------- Add ---------- */
 
@@ -80,9 +80,7 @@ export default function CategoryManagementSection() {
             "
           >
             <div className="text-2xl mb-2">📂</div>
-            <p className="text-sm text-gray-500">
-              No custom categories yet
-            </p>
+            <p className="text-sm text-gray-500">No custom categories yet</p>
             <p className="text-xs text-gray-400 mt-1">
               Add your own categories to personalize tracking
             </p>
@@ -143,11 +141,7 @@ export default function CategoryManagementSection() {
           </div>
 
           {/* Error */}
-          {error && (
-            <p className="text-sm text-red-500 px-1">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-sm text-red-500 px-1">{error}</p>}
         </div>
       </div>
 

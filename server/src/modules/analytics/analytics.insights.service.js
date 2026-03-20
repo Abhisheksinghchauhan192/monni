@@ -3,13 +3,14 @@ import {
   getBreakdown,
   getTrend,
   getEarliestExpenseDate,
+  getCurrencyDetail,
 } from "./analytics.model.js";
 
 export async function generateInsights(userId) {
   const today = new Date().toISOString().split("T")[0];
 
   const earliest = await getEarliestExpenseDate(userId);
-
+  const currency = await getCurrencyDetail(userId);
   if (!earliest) {
     return [];
   }
@@ -44,7 +45,7 @@ export async function generateInsights(userId) {
 
   if (summary.highestExpense) {
     insights.push(
-      `Your highest single expense was ₹${summary.highestExpense}.`
+      `Your highest single expense was : ${summary.highestExpense} ${currency}.`
     );
   }
 
@@ -54,7 +55,7 @@ export async function generateInsights(userId) {
     const avg = (summary.total / summary.count).toFixed(2);
 
     insights.push(
-      `Your average expense amount is ₹${avg}.`
+      `Your average expense amount is ${avg} ${currency}.`
     );
   }
 
@@ -69,7 +70,7 @@ export async function generateInsights(userId) {
       .split("T")[0];
 
     insights.push(
-      `Your highest spending day was ${date} with ₹${highestDay.total}.`
+      `Your highest spending day was ${date} with ${highestDay.total} ${currency}.`
     );
   }
 

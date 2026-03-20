@@ -11,11 +11,13 @@ import { useState } from "react";
 import useTrendAnalytics from "../hooks/useTrendAnalytics";
 import CustomTooltip from "./ui/CustomTooltip";
 import MetricCard from "./ui/MetricCard"; // assuming you already created it
+import useCurrency from "../../../hooks/useCurrency";
 
 export default function TrendCharts({ trend, loading, dateRange }) {
   const [viewMode, setViewMode] = useState("normal");
   const analytics = useTrendAnalytics(trend, dateRange, viewMode);
 
+  const{format} = useCurrency()
   return (
     <div
       className="bg-white dark:bg-gray-900
@@ -68,26 +70,26 @@ export default function TrendCharts({ trend, loading, dateRange }) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <MetricCard
               title="Total Spent"
-              value={`₹${analytics.total.toLocaleString()}`}
+              value={`${format(analytics.total)}`}
               desc="Total in selected period"
             />
 
             <MetricCard
               title="Average"
-              value={`₹${analytics.average.toFixed(0)}`}
+              value={`${format(analytics.average)}`}
               desc={analytics.averageLabel}
             />
 
             <MetricCard
               title="Highest"
-              value={`₹${analytics.highest.total.toLocaleString()}`}
+              value={`${format(analytics.highest.total)}`}
               desc="Highest period"
               highlight
             />
 
             <MetricCard
               title="Lowest"
-              value={`₹${analytics.lowest.total.toLocaleString()}`}
+              value={`${format(analytics.lowest.total)}`}
               desc="Lowest period"
             />
           </div>
