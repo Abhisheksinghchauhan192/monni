@@ -1,14 +1,20 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { HiMenu, HiX } from "react-icons/hi";
-import { FaMoon } from "react-icons/fa";
+import { FaMoon,FaLaptop } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
 import { useTheme } from "../../context/ThemeContext";
 import { useState, useRef, useEffect } from "react";
 
 export default function PublicNavbar() {
-  const { toggleTheme, theme } = useTheme();
+  const { setTheme, theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const nextTheme = {
+    system: "light",
+    light: "dark",
+    dark: "system",
+  };
 
   const location = useLocation();
   const navLinkClass = (hash) =>
@@ -77,9 +83,7 @@ export default function PublicNavbar() {
             Contact
           </NavLink>
 
-          <NavLink to="/login">
-            Login
-          </NavLink>
+          <NavLink to="/login">Login</NavLink>
 
           <NavLink
             to="/register"
@@ -90,13 +94,15 @@ export default function PublicNavbar() {
 
           {/* Theme Toggle */}
           <button
-            onClick={toggleTheme}
+            onClick={() => setTheme(nextTheme[theme])}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-100 dark:hover:bg-gray-800 transition cursor-pointer"
           >
             {theme === "dark" ? (
-              <IoSunny className="text-xl" />
+              <IoSunny />
+            ) : theme === "system" ? (
+              <FaLaptop />
             ) : (
-              <FaMoon className="text-xl" />
+              <FaMoon />
             )}
           </button>
         </div>
@@ -175,10 +181,16 @@ export default function PublicNavbar() {
           </NavLink>
 
           <button
-            onClick={toggleTheme}
+            onClick={() => setTheme(nextTheme[theme])}
             className="w-full py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           >
-            Toggle Theme
+            {theme === "dark" ? (
+              <IoSunny />
+            ) : theme === "system" ? (
+              <FaLaptop />
+            ) : (
+              <FaMoon />
+            )}{" "}
           </button>
         </div>
       )}

@@ -1,52 +1,61 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Lock, Trash2 } from "lucide-react";
 import ChangePasswordModal from "../modals/ChangePasswordModal";
 import DeleteAccountModal from "../modals/DeleteAccountModal";
-
+import ActionCard from "../components/ActionCard";
 export default function SecuritySection() {
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   return (
-    <div
-      className="
-      bg-white dark:bg-zinc-900
-      border border-gray-200 dark:border-zinc-800
-      rounded-2xl p-5
-      "
-    >
-      <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wide">
-        Security
-      </h2>
-
-      <div className="space-y-3">
-
-        <button
-          onClick={() => setPasswordOpen(true)}
-          className="
-          w-full text-left px-4 py-3
-          rounded-xl
-          bg-gray-50 dark:bg-zinc-800
-          hover:bg-gray-100 dark:hover:bg-zinc-700
-          transition
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="
+          bg-white/70 dark:bg-zinc-900/60
+          backdrop-blur-md
+          border border-gray-200 dark:border-zinc-800
+          rounded-2xl p-5
+          shadow-sm
         "
-        >
-          Change Password
-        </button>
+      >
+        {/* HEADER */}
+        <div className="mb-5">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Security
+          </h2>
+          <p className="text-xs text-gray-400 mt-1">
+            Manage your account protection and access
+          </p>
+        </div>
 
-        <button
-          onClick={() => setDeleteOpen(true)}
-          className="
-          w-full text-left px-4 py-3
-          rounded-xl
-          bg-red-50 text-red-600
-          dark:bg-red-900/30 dark:text-red-400
-        "
-        >
-          Delete Account
-        </button>
+        {/* ACTIONS */}
+        <div className="space-y-3">
 
-      </div>
+          {/* CHANGE PASSWORD */}
+          <ActionCard
+            icon={<Lock size={18} />}
+            title="Change Password"
+            subtitle="Update your account password"
+            onClick={() => setPasswordOpen(true)}
+          />
 
+          {/* DELETE ACCOUNT */}
+          <ActionCard
+            icon={<Trash2 size={18} />}
+            title="Delete Account"
+            subtitle="Permanently remove your account"
+            danger
+            onClick={() => setDeleteOpen(true)}
+          />
+
+        </div>
+      </motion.div>
+
+      {/* MODALS */}
       {passwordOpen && (
         <ChangePasswordModal onClose={() => setPasswordOpen(false)} />
       )}
@@ -54,6 +63,7 @@ export default function SecuritySection() {
       {deleteOpen && (
         <DeleteAccountModal onClose={() => setDeleteOpen(false)} />
       )}
-    </div>
+    </>
   );
 }
+

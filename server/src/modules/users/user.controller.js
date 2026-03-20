@@ -63,7 +63,7 @@ export const getUserSettingsController = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    data: settings,
+    ...settings,
   });
 });
 
