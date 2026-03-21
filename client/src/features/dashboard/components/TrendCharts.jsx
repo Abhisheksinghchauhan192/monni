@@ -10,20 +10,25 @@ import {
 import { useState } from "react";
 import useTrendAnalytics from "../hooks/useTrendAnalytics";
 import CustomTooltip from "./ui/CustomTooltip";
-import MetricCard from "./ui/MetricCard"; // assuming you already created it
+import MetricCard from "./ui/MetricCard";
 import useCurrency from "../../../hooks/useCurrency";
 
-export default function TrendCharts({ trend, loading, dateRange }) {
+export default function TrendCharts({ trend, loading, filter }) {
   const [viewMode, setViewMode] = useState("normal");
-  const analytics = useTrendAnalytics(trend, dateRange, viewMode);
+  const analytics = useTrendAnalytics(trend, filter, viewMode);
 
-  const{format} = useCurrency()
+  const { format } = useCurrency();
   return (
     <div
-      className="bg-white dark:bg-gray-900
-                 border border-gray-200 dark:border-gray-800
-                 rounded-2xl shadow-sm
-                 p-6 space-y-6 z-1000"
+      className="
+    bg-white/70 dark:bg-gray-900/70
+    backdrop-blur-md
+    border border-gray-200 dark:border-gray-800
+    rounded-2xl
+    shadow-sm hover:shadow-md
+    transition-all duration-300
+    p-6 space-y-6
+  "
     >
       {/* Loading */}
       {loading && (
@@ -35,71 +40,82 @@ export default function TrendCharts({ trend, loading, dateRange }) {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Spending Trend</h3>
-              <p className="text-xs text-gray-500">
+              <h3 className="text-lg font-semibold tracking-tight">
+                Spending Trend
+              </h3>
+              <p className="text-xs text-gray-500 mt-0.5">
                 {analytics.from} – {analytics.to}
               </p>
             </div>
 
             <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode("normal")}
-                className={`px-3 py-1 text-xs rounded-md transition ${
-                  viewMode === "normal"
-                    ? "bg-white dark:bg-gray-700 shadow-sm"
-                    : "text-gray-500"
-                }`}
-              >
-                Normal
-              </button>
-
-              <button
-                onClick={() => setViewMode("cumulative")}
-                className={`px-3 py-1 text-xs rounded-md transition ${
-                  viewMode === "cumulative"
-                    ? "bg-white dark:bg-gray-700 shadow-sm"
-                    : "text-gray-500"
-                }`}
-              >
-                Cumulative
-              </button>
+              {["normal", "cumulative"].map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode)}
+                  className={`
+          px-3 py-1 text-xs rounded-md transition-all duration-200
+          ${
+            viewMode === mode
+              ? "bg-white dark:bg-gray-700 shadow-sm scale-[1.03]"
+              : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-200"
+          }
+        `}
+                >
+                  {mode === "normal" ? "Normal" : "Cumulative"}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <MetricCard
-              title="Total Spent"
-              value={`${format(analytics.total)}`}
-              desc="Total in selected period"
-            />
-
-            <MetricCard
-              title="Average"
-              value={`${format(analytics.average)}`}
-              desc={analytics.averageLabel}
-            />
-
-            <MetricCard
-              title="Highest"
-              value={`${format(analytics.highest.total)}`}
-              desc="Highest period"
-              highlight
-            />
-
-            <MetricCard
-              title="Lowest"
-              value={`${format(analytics.lowest.total)}`}
-              desc="Lowest period"
-            />
+            {[
+              {
+                title: "Total Spent",
+                value: format(analytics.total),
+                desc: "Total in selected period",
+              },
+              {
+                title: "Average",
+                value: format(analytics.average),
+                desc: analytics.averageLabel,
+              },
+              {
+                title: "Highest",
+                value: format(analytics.highest.total),
+                desc: "Highest period",
+                highlight: true,
+              },
+              {
+                title: "Lowest",
+                value: format(analytics.lowest.total),
+                desc: "Lowest period",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="transform transition duration-300 hover:scale-[1.02]"
+                style={{ animation: `fade-in 0.4s ease ${i * 0.05}s both` }}
+              >
+                <MetricCard {...item} />
+              </div>
+            ))}
           </div>
 
           {/* Chart */}
-          <div className="h-[350px] w-full">
+          <div
+            className="
+    h-[350px] w-full
+    rounded-xl
+    bg-gray-50/40 dark:bg-gray-800/40
+    p-2
+  "
+          >
+            {" "}
             <ResponsiveContainer>
               <LineChart data={analytics.data}>
-                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
-
+                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.08} />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }} />
 
                 <YAxis tick={{ fontSize: 12 }} />
@@ -111,6 +127,7 @@ export default function TrendCharts({ trend, loading, dateRange }) {
                   dataKey="total"
                   stroke="#10b981"
                   strokeWidth={3}
+                  strokeOpacity={0.9}
                   dot={(props) => {
                     const { payload } = props;
 
@@ -119,6 +136,7 @@ export default function TrendCharts({ trend, loading, dateRange }) {
                         cx={props.cx}
                         cy={props.cy}
                         r={payload.isHighest ? 6 : 3}
+                        className="transition-all duration-200"
                         fill={
                           payload.isHighest
                             ? "#ef4444"
@@ -129,7 +147,10 @@ export default function TrendCharts({ trend, loading, dateRange }) {
                       />
                     );
                   }}
-                  activeDot={{ r: 6 }}
+                  activeDot={{
+                    r: 7,
+                    strokeWidth: 2,
+                  }}
                 />
               </LineChart>
             </ResponsiveContainer>

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import authMiddleware from "../../middlewares/auth.middleware.js";
 import { validateQuery } from "../../validators/validate.js";
-import { dashboard, getInsightsController } from "./analytics.controller.js";
+import { getFullDashboardController, getInsightsController } from "./analytics.controller.js";
 import { dashboardQuerySchema } from "../../validators/analytics/analytics.query.shema.js";
 const router = Router();
 
@@ -13,7 +13,7 @@ router.get(
   "/dashboard",
   authMiddleware,
   validateQuery(dashboardQuerySchema),
-  dashboard,
+  getFullDashboardController,
 );
 
 router.get("/insights",authMiddleware, getInsightsController);

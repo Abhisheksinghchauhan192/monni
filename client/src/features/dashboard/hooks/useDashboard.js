@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchDashboardAnalytics } from "../services/dashboard.api";
+import { useSettings } from "../../../context/SettingsContext";
 
-function transformFilter(filter) {
+function transformFilter(filter, timezone) {
   if (!filter?.mode) return null;
 
   return {
@@ -11,6 +12,7 @@ function transformFilter(filter) {
     from: filter.fromDate,
     to: filter.toDate,
     by: filter.breakdownBy || "category",
+    timezone,
   };
 }
 
@@ -19,9 +21,9 @@ export default function useDashboard(filter) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const { settings } = useSettings();
   useEffect(() => {
-    const apiFilter = transformFilter(filter);
-
+    const apiFilter = transformFilter(filter, settings?.timezone);
     if (!apiFilter) return;
 
     async function load() {
@@ -44,7 +46,7 @@ export default function useDashboard(filter) {
     }
 
     load();
-  }, [filter]);
+  }, [filter,settings?.timezone]);
 
   return { data, loading, error };
 }

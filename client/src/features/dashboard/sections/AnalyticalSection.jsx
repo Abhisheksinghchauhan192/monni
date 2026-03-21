@@ -7,14 +7,16 @@ import useDashboard from "../hooks/useDashboard";
 import AnalyticsSkeleton from "../components/AnalyticsSkeleton";
 
 export default function AnalyticsSection() {
-  const { filter, updateMode, updateField } = useDashboardFilter();
+  const { filter, draftFilter, updateMode, updateField, applyFilter } =
+    useDashboardFilter();
   const { data, loading, error } = useDashboard(filter);
   return (
     <div className="space-y-8">
       <FilterBar
-        filter={filter}
+        filter={draftFilter}
         updateField={updateField}
         updateMode={updateMode}
+        applyFilter={applyFilter}
       />
 
       {loading && <AnalyticsSkeleton />}
@@ -83,11 +85,7 @@ export default function AnalyticsSection() {
             </div>
           </div>
 
-          <TrendCharts
-            trend={data.trend}
-            loading={loading}
-            dateRange={data.dateRange}
-          />
+          <TrendCharts trend={data.trend} loading={loading} filter={filter} />
         </>
       )}
     </div>

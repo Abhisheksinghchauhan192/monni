@@ -2,25 +2,29 @@ import { useCallback, useState } from "react";
 
 export default function useDashboardFilter() {
   const currentYear = new Date().getFullYear();
-  const [filter, setFilter] = useState({
+
+  // draft (UI state)
+  const [draftFilter, setDraftFilter] = useState({
     mode: "overall",
     month: null,
     year: currentYear,
     fromDate: null,
     toDate: null,
-    breakdownBy:"category",
+    breakdownBy: "category",
   });
 
- 
+  //  applied (API state)
+  const [filter, setFilter] = useState(draftFilter);
 
-  const updateBreakdown = useCallback((by)=>{
-    setFilter((prev)=>({
+  const updateBreakdown = useCallback((by) => {
+    setDraftFilter((prev) => ({
       ...prev,
-      breakdownBy:by,
-    }))
-  })
+      breakdownBy: by,
+    }));
+  }, []);
+
   const updateMode = useCallback((mode) => {
-    setFilter((prev) => ({
+    setDraftFilter((prev) => ({
       ...prev,
       mode,
       month: mode === "monthly" ? new Date().getMonth() + 1 : null,
@@ -30,16 +34,23 @@ export default function useDashboardFilter() {
   }, []);
 
   const updateField = useCallback((field, value) => {
-    setFilter((prev) => ({
+    setDraftFilter((prev) => ({
       ...prev,
       [field]: value,
     }));
-  });
+  }, []);
+
+  //  APPLY BUTTON
+  const applyFilter = useCallback(() => {
+    setFilter(draftFilter);
+  }, [draftFilter]);
 
   return {
-    filter,
+    filter,          // used for API
+    draftFilter,     // used for UI
     updateMode,
     updateField,
-    updateBreakdown
+    updateBreakdown,
+    applyFilter,
   };
 }

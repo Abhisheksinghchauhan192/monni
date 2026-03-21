@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useMemo } from "react";
 import useCurrency from "../../../hooks/useCurrency";
-import {useCategories} from "../../../context/CategoriesContext"
+import { useCategories } from "../../../context/CategoriesContext";
 const COLORS = [
   "#10B981",
   "#3B82F6",
@@ -14,7 +14,7 @@ const COLORS = [
 export default function DonutChartSection({ breakdown = [] }) {
   const [activeIndex, setActiveIndex] = useState(null);
   const { format } = useCurrency();
-  const{getCategoryMeta} = useCategories();
+  const { getCategoryMeta } = useCategories();
   const totalAmount = useMemo(() => {
     return breakdown.reduce((sum, item) => sum + Number(item.total), 0);
   }, [breakdown]);
@@ -178,42 +178,48 @@ export default function DonutChartSection({ breakdown = [] }) {
                   onMouseEnter={() => setActiveIndex(index)}
                   onMouseLeave={() => setActiveIndex(null)}
                   className="
-        flex items-center justify-between
-        px-4 py-3 rounded-xl
-        bg-gray-50 dark:bg-gray-800
-        border border-transparent
-        hover:border-gray-200 dark:hover:border-zinc-700
-        transition-all
-        cursor-pointer
-      "
+    group
+    flex flex-col
+    gap-2
+    px-4 py-3 rounded-xl
+    bg-gray-50 dark:bg-gray-800
+    border border-transparent
+    hover:border-gray-200 dark:hover:border-zinc-700
+    hover:shadow-sm
+    transition-all duration-200
+    cursor-pointer
+  "
                 >
-                  {/* Left */}
-                  <div className="flex items-center gap-3 min-w-0">
-                    {/* Category Pill */}
+                  {/* TOP ROW (CATEGORY) */}
+                  <div className="flex items-center gap-2">
+                    {/* Color dot */}
                     <span
-                      className={`
-          inline-flex items-center gap-1
-          px-2.5 py-[3px]
-          rounded-md
-          text-[12px]
-          font-medium
-          whitespace-nowrap
-          ${chip}
-          `}
-                    >
-                      {emoji}
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{
+                        background:
+                          getCategoryMeta(item.label).color ||
+                          COLORS[index % COLORS.length],
+                      }}
+                    />
 
-                      {" " + item.label}
+                    {/* Emoji */}
+                    <span className="text-sm">
+                      {getCategoryMeta(item.label).emoji}
+                    </span>
+
+                    {/* Category name (FULL, NO TRUNCATE) */}
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-snug">
+                      {item.label}
                     </span>
                   </div>
 
-                  {/* Right */}
-                  <div className="text-right ml-3">
-                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  {/* BOTTOM ROW (VALUES) */}
+                  <div className="flex items-center justify-between pl-4">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                       {format(item.total)}
-                    </div>
+                    </span>
 
-                    <div className="text-xs text-gray-400">{percent}%</div>
+                    <span className="text-xs text-gray-400">{percent}%</span>
                   </div>
                 </div>
               );

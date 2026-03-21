@@ -7,7 +7,7 @@ export default function TopSection() {
         <ExpenseSection />
       </div>
 
-      <div>
+      <div >
         <AIInsights />
       </div>
     </div>
