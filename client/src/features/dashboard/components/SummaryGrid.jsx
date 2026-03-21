@@ -1,4 +1,5 @@
-import { getCategoryMeta } from "../../../utils/getCategoryMeta";
+import { useCategories } from "../../../context/CategoriesContext";
+import useCurrency from "../../../hooks/useCurrency";
 import { GrowthBadge } from "./ui/GrowthBadge";
 import { Card } from "./ui/SummaryCard";
 
@@ -9,15 +10,15 @@ export default function SummaryGrid({ summary }) {
   const growth = summary?.growthPercentage ?? 0;
   const highest = summary?.highestExpense ?? 0;
   const topCategory = summary?.topCategory ?? "—";
-
+  const{getCategoryMeta} = useCategories();
   const { emoji, chip } = getCategoryMeta(topCategory);
-
+  const{format} = useCurrency()
   return (
     <div className="flex flex-col gap-6 w-full">
 
       <Card
         title="Total Spend"
-        value={total}
+        value={format(total)}
         subtitle="Total amount spent in selected range"
         extra={<GrowthBadge growth={growth} />}
       />
@@ -30,13 +31,13 @@ export default function SummaryGrid({ summary }) {
 
       <Card
         title="Avg per Expense"
-        value={average}
+        value={format(average)}
         subtitle="Average amount per transaction"
       />
 
       <Card
         title="Highest Expense"
-        value={highest}
+        value={format(highest)}
         subtitle="Single largest transaction"
       />
 

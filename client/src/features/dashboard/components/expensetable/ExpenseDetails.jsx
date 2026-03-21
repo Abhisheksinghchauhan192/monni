@@ -1,12 +1,14 @@
 import { useState } from "react";
 import DeleteConfirmation from "./DeleteConfirmation";
 import useDeleteExpense from "../../hooks/useDeleteExpense";
-import { getCategoryMeta } from "../../../../utils/getCategoryMeta";
+import useCurrency from "../../../../hooks/useCurrency";
+import { useCategories } from "../../../../context/CategoriesContext";
 
 export default function ExpenseDetails({ expense, onEdit, onDeleteSuccess }) {
   const [confirm, setConfirm] = useState(false);
   const { deleteExpense } = useDeleteExpense();
-
+  const{format} = useCurrency();
+  const{getCategoryMeta} = useCategories();
   const { emoji, chip } = getCategoryMeta(expense.category);
 
   const handleDelete = async () => {
@@ -24,7 +26,7 @@ export default function ExpenseDetails({ expense, onEdit, onDeleteSuccess }) {
       {/* Amount */}
       <div className="mb-6">
         <div className="text-3xl font-bold text-emerald-600">
-          ₹ {Number(expense.amount).toLocaleString()}
+          {format(expense.amount)}
         </div>
       </div>
 

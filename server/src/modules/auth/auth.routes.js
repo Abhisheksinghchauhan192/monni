@@ -15,7 +15,6 @@ import {
   registerSchema,
   loginSchema,
 } from "../../validators/auth/auth.schema.js";
-import { profileUpdateSchema } from "../../validators/auth/profile.schema.js";
 import { otpSchema, resendOtpSchema } from "../../validators/auth/otp.schema.js";
 import {
   forgotPasswordSchema,

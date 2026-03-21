@@ -57,12 +57,36 @@ export default function EditExpenseForm({
         form={form}
       />
 
-      <SelectField
-        label="Payment Method"
-        name="payment_method"
-        options={PAYMENT_METHODS}
-        form={form}
-      />
+      <div className="flex flex-col">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Payment Method
+        </label>
+        <select
+          name="payment_method"
+          id="paymentMethod"
+          className="mt-1 px-4 py-2 rounded-xl
+          border
+          bg-gray-50 dark:bg-zinc-800
+          outline-none
+          transition
+          focus:ring-2 focus:ring-emerald-500"
+          value={form.values["payment_method"]??""}
+          onChange={form.handleChange}
+        >
+          <option value="">Select</option>
+          {PAYMENT_METHODS.map((m) => (
+            <option value={m} key={m}>
+              {m}
+            </option>
+          ))}{" "}
+        </select>
+
+      {!!form.errors["payment_method"] && (
+        <span className="text-xs text-red-500 mt-1">
+          {form.errors["payment_method"]}
+        </span>
+      )}
+      </div>
 
       <div className="flex justify-between mt-6">
         <button

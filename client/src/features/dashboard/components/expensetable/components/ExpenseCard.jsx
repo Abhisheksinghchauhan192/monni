@@ -1,14 +1,16 @@
 import { useRef, useState } from "react";
 import { Pencil } from "lucide-react";
 import React from "react";
-import { getCategoryMeta } from "../../../../../utils/getCategoryMeta";
+import useCurrency from "../../../../../hooks/useCurrency";
+import {useCategories} from "../../../../../context/CategoriesContext"
 function ExpenseCard({ expense, onOpen, onEdit }) {
   // Interaction refs
   const clickTimeout = useRef(null);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const currentX = useRef(0);
-
+  const {format} = useCurrency();
+  const{getCategoryMeta} = useCategories();
   //category emoji system
   const { emoji, chip } = getCategoryMeta(expense.category);
 
@@ -218,7 +220,7 @@ function ExpenseCard({ expense, onOpen, onEdit }) {
               tracking-tight
               "
             >
-              ₹{Number(expense.amount).toFixed(2)}
+              {format(expense.amount)}
             </p>
 
             {/* Merchant */}

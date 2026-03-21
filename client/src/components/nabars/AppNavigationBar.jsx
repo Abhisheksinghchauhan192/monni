@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
-import { FaMoon } from "react-icons/fa";
+import { FaLaptop, FaMoon } from "react-icons/fa";
 import { IoSunny } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -11,13 +11,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User } from "lucide-react";
 
 export default function AppNavigationBar() {
-  const { toggleTheme, theme } = useTheme();
+  const { setTheme, theme } = useTheme();
   const navigate = useNavigate();
   const { logout, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileHovered, setIsProfileHovered] = useState(false);
   const dropdownRef = useRef(null);
   const { addToast } = useToast();
+
+  const nextTheme = {
+    system: "light",
+    light: "dark",
+    dark: "system",
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -66,9 +72,9 @@ export default function AppNavigationBar() {
           "
         >
           {/* Logo */}
-          <h1 className="font-bold text-lg tracking-tight text-gray-800 dark:text-gray-100 select-none cursor-pointer">
+          <NavLink  to ="/app" className="font-bold text-lg tracking-tight text-gray-800 dark:text-gray-100 select-none cursor-pointer">
             MoNNi
-          </h1>
+          </NavLink>
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
@@ -85,9 +91,7 @@ export default function AppNavigationBar() {
               onMouseEnter={() => setIsProfileHovered(true)}
               onMouseLeave={() => setIsProfileHovered(false)}
             >
-              <div
-                className="w-10 h-10 rounded-full ring-2 ring-emerald-300 cursor-pointer overflow-hidden transition-transform duration-200 hover:scale-105"
-              >
+              <div className="w-10 h-10 rounded-full ring-2 ring-emerald-300 cursor-pointer overflow-hidden transition-transform duration-200 hover:scale-105">
                 <img
                   src="/NavbarProfileImage.png"
                   alt="Profile"
@@ -107,7 +111,9 @@ export default function AppNavigationBar() {
                   >
                     {/* User Info */}
                     <div className="px-4 py-3 border-b border-gray-50 dark:border-gray-800 mb-2">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Current Account</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">
+                        Current Account
+                      </p>
                       <p className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate mt-0.5">
                         {user?.name || "Monni User"}
                       </p>
@@ -115,7 +121,7 @@ export default function AppNavigationBar() {
 
                     <div className="space-y-1">
                       {/* Profile Text */}
-                      <button 
+                      <button
                         onClick={() => {
                           setIsProfileHovered(false);
                           navigate("/app/profile");
@@ -129,12 +135,19 @@ export default function AppNavigationBar() {
                       </button>
 
                       {/* Theme Toggle */}
+
                       <button
-                        onClick={toggleTheme}
+                        onClick={() => setTheme(nextTheme[theme])}
                         className="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl transition-all duration-200"
                       >
                         <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/40 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all text-lg">
-                          {theme === "dark" ? <IoSunny /> : <FaMoon />}
+                          {theme === "dark" ? (
+                            <IoSunny />
+                          ) : theme === "system" ? (
+                            <FaLaptop />
+                          ) : (
+                            <FaMoon />
+                          )}
                         </div>
                         <span className="flex-1 text-left">Change Theme</span>
                       </button>
@@ -241,10 +254,16 @@ export default function AppNavigationBar() {
 
               <div className="grid grid-cols-2 gap-3 pt-6 border-t border-gray-100 dark:border-gray-800">
                 <button
-                  onClick={toggleTheme}
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                   className="flex items-center justify-center gap-2 py-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                 >
-                  {theme === "dark" ? <IoSunny /> : <FaMoon />}
+                  {theme === "dark" ? (
+                    <IoSunny />
+                  ) : theme === "system" ? (
+                    <FaLaptop />
+                  ) : (
+                    <FaMoon />
+                  )}{" "}
                   Theme
                 </button>
 

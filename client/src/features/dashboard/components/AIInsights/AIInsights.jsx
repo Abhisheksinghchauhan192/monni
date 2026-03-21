@@ -8,10 +8,11 @@ import InsightCards from "./InsightsCards";
 
 import useAIInsights from "../../hooks/useAIInsights";
 import { chatWithAI } from "../../services/ai.api";
+import useCurrency from "../../../../hooks/useCurrency";
 
 export default function AIInsights() {
   const { insights, loading } = useAIInsights();
-
+  const{format} = useCurrency();
   const [messages, setMessages] = useState([
     {
       role: "assistant",

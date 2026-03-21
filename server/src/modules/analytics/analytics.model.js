@@ -29,9 +29,11 @@ export async function getBreakdown(userId, from, to, by) {
 
 /* Trend */
 
-export async function getTrend(userId, from, to, interval) {
+export async function getTrend(userId, from, to, interval, timezone) {
   const groupExpr =
-    interval === "day" ? "expense_date" : "DATE_FORMAT(expense_date, '%Y-%m')";
+    interval === "day"
+      ? "DATE(CONVERT_TZ(expense_date, 'UTC', ?))"
+      : "DATE_FORMAT(CONVERT_TZ(expense_date, 'UTC', ?), '%Y-%m')";
 
   const query = `
     SELECT ${groupExpr} AS period,
@@ -44,7 +46,12 @@ export async function getTrend(userId, from, to, interval) {
     ORDER BY period ASC
   `;
 
-  const [rows] = await pool.query(query, [userId, from, to]);
+  const [rows] = await pool.query(query, [
+    timezone,
+    userId,
+    from,
+    to,
+  ]);
 
   return rows.map((row) => ({
     period: row.period,
@@ -136,4 +143,13 @@ export async function getEarliestExpenseDate(userId) {
   );
 
   return row.earliest || null;
+}
+
+export async function getCurrencyDetail(userId){
+  const[[row]] = await pool.query(
+    `
+    SELECT currency FROM user_settings WHERE user_id = ?
+    `,[userId]
+  )
+  return row.currency;
 }

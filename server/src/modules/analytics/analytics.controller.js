@@ -1,11 +1,11 @@
 import { getFullDashboardService } from "./analytics.service.js";
 import { generateInsights } from "./analytics.insights.service.js";
-export async function dashboard(req, res, next) {
+export async function getFullDashboardController(req, res, next) {
   try {
     const userId = req.user.id;
     const query = req.validatedQuery;
-
-    const data = await getFullDashboardService(userId, query);
+    const timezone = query.timezone || "UTC";
+    const data = await getFullDashboardService(userId, {...query,timezone});
 
     res.json({
       success: true,

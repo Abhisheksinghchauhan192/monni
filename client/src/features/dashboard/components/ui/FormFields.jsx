@@ -75,8 +75,8 @@ export function SelectField({
         <option value="">Select</option>
 
         {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option.id} value={option.name}>
+            {option.emoji}{option.label}
           </option>
         ))}
       </select>

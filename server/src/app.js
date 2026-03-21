@@ -12,7 +12,7 @@ app.set("trust proxy", 1);
 app.use(
   cors({
     origin: ["http://localhost:5173","https://monni-one.vercel.app","https://www.monni.tech","https://monni.tech"],
-    methods: ["PUT", "GET", "POST", "DELETE"],
+    methods: ["PUT", "GET", "POST", "DELETE","PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),

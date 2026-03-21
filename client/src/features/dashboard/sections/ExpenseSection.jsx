@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import TableFilterBar from "../components/expensetable/TableFilterBar";
 import ExpenseTable from "../components/expensetable/ExpenseTable";
 import AddExpenseButton from "../components/AddExpenseButton";
-import useCategories from "../../../hooks/useCategories";
 import useExpense from "../hooks/useExpense";
+import { useCategories } from "../../../context/CategoriesContext";
+import useDebounce from "../../../hooks/useDebounce";
+
+/* ---------- DEFAULT ---------- */
 
 const DEFAULT_FILTERS = {
   search: "",
@@ -13,9 +16,19 @@ const DEFAULT_FILTERS = {
   toDate: "",
 };
 
-export default function ExpenseSection() {
+/* ---------- HELPER: DEEP EQUAL ---------- */
+function isEqual(obj1, obj2) {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
 
+/* ---------- COMPONENT ---------- */
+
+export default function ExpenseSection() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
+  const { categories } = useCategories();
+
+  /* ---------- CLEAR ---------- */
 
   const clearFilters = () => {
     setFilters(DEFAULT_FILTERS);
@@ -23,7 +36,43 @@ export default function ExpenseSection() {
 
   const filtersActive = Object.values(filters).some(Boolean);
 
-  const { categories } = useCategories();
+  /* ---------- SMART FETCH SYSTEM ---------- */
+
+  // 1. debounce filters
+  const debouncedFilters = useDebounce(filters, 500);
+
+  // 2. store last applied filters
+  const lastAppliedFilters = useRef(debouncedFilters);
+
+  // 3. check if actually changed
+  const hasChanged = !isEqual(
+    lastAppliedFilters.current,
+    debouncedFilters
+  );
+
+  // 4. validate (important for date range)
+  const isValidFilter = (() => {
+    if (debouncedFilters.fromDate && !debouncedFilters.toDate)
+      return false;
+
+    if (!debouncedFilters.fromDate && debouncedFilters.toDate)
+      return false;
+
+    return true;
+  })();
+
+  // 5. decide final filters
+  const effectiveFilters =
+    hasChanged && isValidFilter
+      ? debouncedFilters
+      : lastAppliedFilters.current;
+
+  // 6. update last applied
+  if (hasChanged && isValidFilter) {
+    lastAppliedFilters.current = debouncedFilters;
+  }
+
+  /* ---------- DATA ---------- */
 
   const {
     expenses,
@@ -32,12 +81,16 @@ export default function ExpenseSection() {
     loading,
     setExpenses,
     error,
-    setError
-  } = useExpense(filters);
+    setError,
+  } = useExpense(effectiveFilters);
+
+  /* ---------- ADD EXPENSE ---------- */
 
   const handleExpenseAdded = (newExpense) => {
-    setExpenses(prev => [newExpense, ...prev]);
+    setExpenses((prev) => [newExpense, ...prev]);
   };
+
+  /* ---------- UI ---------- */
 
   return (
     <div
