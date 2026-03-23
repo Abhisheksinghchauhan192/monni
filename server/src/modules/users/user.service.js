@@ -26,6 +26,26 @@ export async function updateProfileService(userId, data) {
   };
 }
 
+export async function updateProfilePhotoService(userId, data) {
+  await updateUserProfile(userId, data);
+
+  const updatedUser = await findUserById(userId);
+
+  return {
+    profile_image: updatedUser.profile_image,
+  };
+}
+
+// get user profile photo.
+export async function getUserProfileImage(userId) {
+  const user = await findUserById(userId);
+
+  return {
+    profile_image: user.profile_image,
+    profile_image_public_id: user.profile_image_id,
+  };
+}
+
 export async function changePasswordService(userId, data) {
   const user = await findPasswordHashById(userId);
   const isMatch = await comparePassword(
@@ -51,7 +71,7 @@ export async function deleteAccountService(userId) {
 }
 
 //----------------------------------------------------------
-// User Personalization Settings Services 
+// User Personalization Settings Services
 //------------------------------------------------------
 
 // Fetch users settings.

@@ -24,7 +24,7 @@ export async function findUserByEmail(email) {
 // User Utility function
 export async function findUserById(id) {
   const [rows] = await pool.query(
-    `SELECT id, public_id, name, email, mobile, profile_image, is_verified
+    `SELECT id, public_id, name, email, mobile, profile_image,profile_image_id, is_verified
      FROM users WHERE id = ?`,
     [id],
   );
@@ -87,7 +87,7 @@ export async function clearResetToken(id) {
 
 // Update Profile Image,Name,Profile picture.
 export async function updateUserProfile(id, data) {
-  const allowedFields = ["name", "mobile", "profile_image"];
+  const allowedFields = ["name", "mobile", "profile_image","profile_image_id"];
 
   const fields = [];
   const values = [];

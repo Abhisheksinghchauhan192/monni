@@ -204,6 +204,7 @@ export default function FilterBar({
               active:scale-95
               transition
               shadow-sm
+              mr-20
             "
           >
             Apply

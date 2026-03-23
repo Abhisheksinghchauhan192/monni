@@ -6,6 +6,17 @@ export const updateProfile = async(data)=>{
     return res.data;
 }
 
+
+/*Change Profile Photo */
+export const uploadProfilePhoto = async(file)=>{
+  const formData = new FormData();
+  formData.append("photo",file);
+
+  const res = await http.post("/users/profile/photo",formData);
+
+  return res.data;
+}
+
 /* Change Password */
 export const changePassword = async (data) => {
   const res = await http.patch("/users/password", data, 

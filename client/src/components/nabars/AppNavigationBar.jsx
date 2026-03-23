@@ -93,7 +93,7 @@ export default function AppNavigationBar() {
             >
               <div className="w-10 h-10 rounded-full ring-2 ring-emerald-300 cursor-pointer overflow-hidden transition-transform duration-200 hover:scale-105">
                 <img
-                  src="/NavbarProfileImage.png"
+                  src={user.profile_image || '/NavbarProfileImage.png'}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -201,7 +201,7 @@ export default function AppNavigationBar() {
               <div className="flex flex-col items-center gap-4">
                 <div className="h-24 w-24 rounded-full ring-4 ring-emerald-500/20 p-1">
                   <img
-                    src="/NavbarProfileImage.png"
+                    src={user.profile_image || "/NavbarProfileImage.png"}
                     alt="User Profile"
                     className="h-full w-full rounded-full object-cover"
                   />
