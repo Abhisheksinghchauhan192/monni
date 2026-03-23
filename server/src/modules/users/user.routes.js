@@ -5,6 +5,7 @@ import {
   deleteAccountController,
   getUserSettingsController,
   updateUserSettingsController,
+  updateProfilePhotoController,
 } from "./user.controller.js";
 import authMiddleware from "../../middlewares/auth.middleware.js";
 
@@ -16,6 +17,7 @@ import {
   changePasswordSchema,
 } from "../../validators/users/user.update.schema.js";
 import { updateSettingsSchema } from "../../validators/users/userSettings.schema.js";
+import { upload } from "../../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -25,6 +27,14 @@ router.patch(
   authMiddleware,
   validateBody(updateProfileSchema),
   updateProfileController,
+);
+
+// user profilee photo updation route.
+router.post(
+  "/profile/photo",
+  authMiddleware,
+  upload.single("photo"),
+  updateProfilePhotoController,
 );
 
 router.patch(

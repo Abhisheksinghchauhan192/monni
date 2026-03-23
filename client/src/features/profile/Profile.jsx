@@ -3,9 +3,12 @@ import AccountSection from "./sections/AccountSection";
 import SecuritySection from "./sections/SecuritySection";
 import PersonalizationSection from "./sections/PersonalizationSection";
 import CategoriesSection from "./sections/CategoryManagementSection";
+import ProfileAvatarUpload from "./components/ProfileAvatarUpload";
+import { useProfile } from "./hooks/useProfile";
 
 export default function Profile() {
   const { user, loading } = useAuth();
+  const{uploadPhoto,uploading} = useProfile();
 
   if (loading) {
     return (
@@ -29,14 +32,13 @@ export default function Profile() {
 
         {/* Header */}
         <div className="flex items-center gap-4">
-          <img
-            src={user.profileImage || "/NavbarProfileImage.png"}
-            className="w-16 h-16 rounded-xl object-cover"
-          />
+          
+          <ProfileAvatarUpload user={user} uploadPhoto={uploadPhoto} uploading={uploading} />
           <div>
             <h1 className="text-xl font-bold">{user.name}</h1>
             <p className="text-sm text-gray-500">{user.email}</p>
           </div>
+
         </div>
 
         {/* Sections */}
