@@ -182,14 +182,14 @@ export default function PublicNavbar() {
 
           <button
             onClick={() => setTheme(nextTheme[theme])}
-            className="w-full py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            className="w-full py-2 rounded-lg  bg-gray-100 dark:bg-gray-800 text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           >
             {theme === "dark" ? (
-              <IoSunny />
+              <IoSunny className="justify-self-center"/>
             ) : theme === "system" ? (
-              <FaLaptop />
+              <FaLaptop  className="justify-self-center"/>
             ) : (
-              <FaMoon />
+              <FaMoon className="justify-self-center" />
             )}{" "}
           </button>
         </div>
