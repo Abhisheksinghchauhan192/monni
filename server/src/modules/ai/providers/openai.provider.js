@@ -1,7 +1,7 @@
 import OpenAI from "openai";
-
+import { OPENAI_API_KEY } from "../../../config/env.js";
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey:OPENAI_API_KEY
 });
 
 export async function callOpenAI({

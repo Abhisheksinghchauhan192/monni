@@ -1,6 +1,6 @@
 import axios from "axios";
-
-const API_KEY = process.env.OPENROUTER_API_KEY;
+import { OPENROUTER_API_KEY } from "../../../config/env.js";
+const API_KEY = OPENROUTER_API_KEY;
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 

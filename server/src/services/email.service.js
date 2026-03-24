@@ -2,8 +2,9 @@ import { Resend } from "resend";
 import { resetPasswordTemplate } from "../templates/resetPassword.template.js";
 import { welcomeEmailTemplate } from "../templates/welcome.template.js";
 import { otpEmailTemplate } from "../templates/otp.template.js";
+import {RESEND_API_KEY} from "../config/env.js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(RESEND_API_KEY);
 
 const EMAIL_FROM = "MoNNi <no-reply@monni.tech>";
 
