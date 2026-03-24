@@ -1,4 +1,5 @@
 import axios from "axios";
+import {GEMINI_API_KEY} from "../../../config/env.js";
 
 let lastRequestTime = 0;
 const MIN_REQUEST_INTERVAL = 1200;
@@ -6,7 +7,7 @@ const MIN_REQUEST_INTERVAL = 1200;
 const GEMINI_URL ="https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
 
 
-const API_KEY = process.env.GEMINI_API_KEY;
+const API_KEY = GEMINI_API_KEY;
 
 /*
 -----------------------------------------

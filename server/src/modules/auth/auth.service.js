@@ -6,6 +6,7 @@ import {
   updateUserPassword,
   clearResetToken,
 } from "../users/user.model.js";
+import { FRONTEND_URL } from "../../config/env.js";
 import ApiError from "../../errors/ApiError.js";
 import { hashPassword, comparePassword } from "../../utils/password.js";
 import { generateToken } from "../../utils/jwt.js";
@@ -77,7 +78,7 @@ export async function forgotPasswordService(email) {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); //10 Minutes
   await saveResetToken(user.id, hashedToken, expiresAt);
 
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password/${rawToken}`;
+  const resetLink = `${FRONTEND_URL}/reset-password/${rawToken}`;
 
   await sendResetEmail(user.email, resetLink);
 }
