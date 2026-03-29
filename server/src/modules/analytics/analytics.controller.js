@@ -19,7 +19,8 @@ export async function getFullDashboardController(req, res, next) {
 
 export async function getInsightsController(req, res) {
   const userId = req.user.id;
-  const insights = await generateInsights(userId);
+  const timezone = req.query.timezone ||"UTC";
+  const insights = await generateInsights(userId,timezone);
 
   res.json({
     success: true,

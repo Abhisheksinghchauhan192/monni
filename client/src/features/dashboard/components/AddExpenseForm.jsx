@@ -41,13 +41,13 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
       merchant: "",
     },
     schema: addExpenseSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       if (values.category === ADD_CATEGORY_OPTION) {
         setCategoryError("Please add a category first.");
         return;
       }
 
-      submitExpense(values);
+      await submitExpense(values);
     },
   });
 
@@ -80,7 +80,7 @@ export default function AddExpenseForm({ onSuccess, onClose }) {
     setCategoryError("");
   };
 
-  return (
+   return (
     <form onSubmit={form.handleSubmit} className="space-y-6">
       {/* Description */}
       <InputField label="Description" name="description" form={form} />

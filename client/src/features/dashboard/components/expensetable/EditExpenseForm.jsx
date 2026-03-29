@@ -9,6 +9,7 @@ export default function EditExpenseForm({
   categories,
   onCancel,
   onSuccess,
+  onClose
 }) {
   const { updateExpense } = useUpdateExpense();
 
@@ -31,12 +32,18 @@ export default function EditExpenseForm({
         return;
       }
 
-      const updated = await updateExpense(values.id, {
-        ...values,
-        amount: Number(values.amount),
-      });
+      try{
+        const updated = await updateExpense(values.id, {
+          ...values,
+          amount: Number(values.amount),
+        });
+        onSuccess(updated);
 
-      onSuccess(updated);
+      }
+      finally{
+        onClose();
+      }
+
     },
   });
 
