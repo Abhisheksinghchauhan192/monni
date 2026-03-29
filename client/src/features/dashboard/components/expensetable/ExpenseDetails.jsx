@@ -4,16 +4,24 @@ import useDeleteExpense from "../../hooks/useDeleteExpense";
 import useCurrency from "../../../../hooks/useCurrency";
 import { useCategories } from "../../../../context/CategoriesContext";
 
-export default function ExpenseDetails({ expense, onEdit, onDeleteSuccess }) {
+export default function ExpenseDetails({ expense, onEdit, onDeleteSuccess,onClose }) {
   const [confirm, setConfirm] = useState(false);
   const { deleteExpense } = useDeleteExpense();
   const{format} = useCurrency();
   const{getCategoryMeta} = useCategories();
   const { emoji, chip } = getCategoryMeta(expense.category);
 
+  const [deleting,setDeleting] = useState(false);
   const handleDelete = async () => {
-    await deleteExpense(expense.id);
-    onDeleteSuccess(expense.id);
+    if(deleting)return;
+    try{
+      setDeleting(true);
+      await deleteExpense(expense.id);
+      onDeleteSuccess(expense.id);
+    }finally{
+      setDeleting(false);
+      onClose();
+    }
   };
 
   return (
@@ -116,6 +124,7 @@ export default function ExpenseDetails({ expense, onEdit, onDeleteSuccess }) {
           <DeleteConfirmation
             onCancel={() => setConfirm(false)}
             onConfirm={handleDelete}
+            deleting={deleting}
           />
         ) : (
           <div className="flex justify-between gap-3">

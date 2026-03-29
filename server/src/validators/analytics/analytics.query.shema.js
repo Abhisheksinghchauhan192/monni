@@ -10,4 +10,5 @@ export const dashboardQuerySchema = z.object({
   to: z.string().optional(),
 
   by: z.enum(["category", "payment_method"]),
+  timezone:z.string(),
 });

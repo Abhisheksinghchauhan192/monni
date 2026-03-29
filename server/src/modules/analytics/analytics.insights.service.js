@@ -6,9 +6,8 @@ import {
   getCurrencyDetail,
 } from "./analytics.model.js";
 
-export async function generateInsights(userId) {
+export async function generateInsights(userId,timezone) {
   const today = new Date().toISOString().split("T")[0];
-
   const earliest = await getEarliestExpenseDate(userId);
   const currency = await getCurrencyDetail(userId);
   if (!earliest) {
@@ -17,11 +16,10 @@ export async function generateInsights(userId) {
 
   const from = earliest;
   const to = today;
-
   const [summary, breakdown, trend] = await Promise.all([
     getDashboardSummary(userId, from, to),
     getBreakdown(userId, from, to, "category"),
-    getTrend(userId, from, to, "day"),
+    getTrend(userId, from, to, "day",timezone),
   ]);
 
   const insights = [];

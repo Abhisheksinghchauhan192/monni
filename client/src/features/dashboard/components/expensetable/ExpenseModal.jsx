@@ -48,6 +48,7 @@ export default function ExpenseModal({
               );
               onClose();
             }}
+            onClose={onClose}
           />
         ) : (
           <ExpenseDetails
@@ -59,6 +60,7 @@ export default function ExpenseModal({
               );
               onClose();
             }}
+            onClose={onClose}
           />
         )}
       </div>

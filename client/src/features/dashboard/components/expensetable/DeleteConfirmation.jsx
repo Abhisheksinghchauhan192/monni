@@ -1,12 +1,11 @@
-export default function DeleteConfirmation({
-  onCancel,
-  onConfirm,
-}) {
+export default function DeleteConfirmation({ onCancel, onConfirm, deleting }) {
   return (
     <div className="space-y-4">
-      <div className="text-sm text-red-600 bg-red-50 
+      <div
+        className="text-sm text-red-600 bg-red-50 
                       dark:bg-red-900/30 
-                      p-3 rounded-xl">
+                      p-3 rounded-xl"
+      >
         This action cannot be undone. Are you sure?
       </div>
 
@@ -21,12 +20,13 @@ export default function DeleteConfirmation({
         </button>
 
         <button
+          disabled={deleting}
           onClick={onConfirm}
           className="px-4 py-2 rounded-xl 
                      bg-red-600 text-white 
                      cursor-pointer"
         >
-          Yes, Delete
+          {deleting?"Deleting..":"Yes, Delete"}
         </button>
       </div>
     </div>

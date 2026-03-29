@@ -35,8 +35,7 @@ export default function useDashboard(filter) {
 
         // IMPORTANT: backend returns { success, data }
         // so we must extract data properly
-
-        setData(result.data ?? result);
+         setData(result.data ?? result);
       } catch (err) {
         console.error("Dashboard error:", err);
         setError("Failed to load dashboard.");
